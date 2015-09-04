@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+	<datasource>Parse</datasource>
+	<tentacles>
+		<tentacle SiteUUID="96ea7dc0-8ca7-11dd-ad8b-0800200c9a66">Blizzard.NorthAmerica.NorthAmericaTentacle</tentacle>
+		<tentacle SiteUUID="96ea7dc2-8ca7-11dd-ad8b-0800200c9a66">Blizzard.Europe.EuropeTentacle</tentacle>
+		<tentacle SiteUUID="96ea7dc3-8ca7-11dd-ad8b-0800200c9a66">ShadowPriest.ShadowPriestTentacle</tentacle>
+		<tentacle SiteUUID="96ea7dc4-8ca7-11dd-ad8b-0800200c9a66">TankSpot.TankSpotTentacle</tentacle>
+		<tentacle SiteUUID="a62d4e40-9b32-11dd-ad8b-0800200c9a66">MMOChampion.NorthAmerica.PvPTentacle</tentacle>
+		<tentacle SiteUUID="a62d4e41-9b32-11dd-ad8b-0800200c9a66">MMOChampion.NorthAmerica.PvETentacle</tentacle>
+		<tentacle SiteUUID="a62d4e42-9b32-11dd-ad8b-0800200c9a66">MMOChampion.Europe.PvPTentacle</tentacle>
+		<tentacle SiteUUID="a62d4e43-9b32-11dd-ad8b-0800200c9a66">MMOChampion.Europe.PvETentacle</tentacle>
+		<tentacle SiteUUID="8ff3b426-40b6-4513-8d14-f66fcfc34336">Wowhead.WowheadTentacle</tentacle>
+		<tentacle SiteUUID="8da90a7a-6362-42cb-981f-d0c23f926b24">BigRedKitty.BigRedKittyTentacle</tentacle>
+		<tentacle SiteUUID="0e2593a0-9d49-11dd-ad8b-0800200c9a66">WorldOfRaids.NorthAmerica.AllianceTentacle</tentacle>
+		<tentacle SiteUUID="0e2593a1-9d49-11dd-ad8b-0800200c9a66">WorldOfRaids.NorthAmerica.HordeTentacle</tentacle>
+		<tentacle SiteUUID="0e2593a2-9d49-11dd-ad8b-0800200c9a66">WorldOfRaids.Europe.AllianceTentacle</tentacle>
+		<tentacle SiteUUID="0e2593a3-9d49-11dd-ad8b-0800200c9a66">WorldOfRaids.Europe.HordeTentacle</tentacle>
+		<tentacle SiteUUID="86172e30-9d55-11dd-ad8b-0800200c9a66">LookingForGuild.NorthAmerica.Alliance.PvPTentacle</tentacle>
+		<tentacle SiteUUID="86172e31-9d55-11dd-ad8b-0800200c9a66">LookingForGuild.NorthAmerica.Alliance.PvETentacle</tentacle>
+		<tentacle SiteUUID="86172e32-9d55-11dd-ad8b-0800200c9a66">LookingForGuild.NorthAmerica.Alliance.RP-PvPTentacle</tentacle>
+		<tentacle SiteUUID="86172e33-9d55-11dd-ad8b-0800200c9a66">LookingForGuild.NorthAmerica.Alliance.RPTentacle</tentacle>
+		<tentacle SiteUUID="86172e34-9d55-11dd-ad8b-0800200c9a66">LookingForGuild.NorthAmerica.Horde.PvPTentacle</tentacle>
+		<tentacle SiteUUID="86172e35-9d55-11dd-ad8b-0800200c9a66">LookingForGuild.NorthAmerica.Horde.PvETentacle</tentacle>
+		<tentacle SiteUUID="86172e36-9d55-11dd-ad8b-0800200c9a66">LookingForGuild.NorthAmerica.Horde.RP-PvPTentacle</tentacle>
+		<tentacle SiteUUID="86172e37-9d55-11dd-ad8b-0800200c9a66">LookingForGuild.NorthAmerica.Horde.RPTentacle</tentacle>
+		<tentacle SiteUUID="86172e38-9d55-11dd-ad8b-0800200c9a66">LookingForGuild.Europe.Alliance.PvPTentacle</tentacle>
+		<tentacle SiteUUID="86172e39-9d55-11dd-ad8b-0800200c9a66">LookingForGuild.Europe.Alliance.PvETentacle</tentacle>
+		<tentacle SiteUUID="86172e3a-9d55-11dd-ad8b-0800200c9a66">LookingForGuild.Europe.Alliance.RP-PvPTentacle</tentacle>
+		<tentacle SiteUUID="86172e3b-9d55-11dd-ad8b-0800200c9a66">LookingForGuild.Europe.Alliance.RPTentacle</tentacle>
+		<tentacle SiteUUID="86172e3c-9d55-11dd-ad8b-0800200c9a66">LookingForGuild.Europe.Horde.PvPTentacle</tentacle>
+		<tentacle SiteUUID="86172e3d-9d55-11dd-ad8b-0800200c9a66">LookingForGuild.Europe.Horde.PvETentacle</tentacle>
+		<tentacle SiteUUID="86172e3e-9d55-11dd-ad8b-0800200c9a66">LookingForGuild.Europe.Horde.RP-PvPTentacle</tentacle>
+		<tentacle SiteUUID="86172e3f-9d55-11dd-ad8b-0800200c9a66">LookingForGuild.Europe.Horde.RPTentacle</tentacle>
+		<tentacle SiteUUID="dd47da00-ff92-46ae-af19-fbb63dcb4da4">DeathKnight.DeathKnightTentacle</tentacle>
+		<tentacle SiteUUID="656b0273-5270-45f1-b884-cd6be0281f18">LightNatured.LightNaturedTentacle</tentacle>
+		<tentacle SiteUUID="c78ec660-7924-11de-8a39-0800200c9a66">Maintankadin.MaintankadinTentacle</tentacle>
+		
+		<!--
+
+		
+		<tentacle SiteUUID="6">WarlocksDen</tentacle>
+		-->
+	</tentacles>
+</config>

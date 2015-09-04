@@ -1,0 +1,477 @@
+/* ADOBE SYSTEMS INCORPORATED Copyright 2007 Adobe Systems Incorporated All Rights Reserved. 
+ NOTICE:Adobe permits you to use, modify, and distribute this file in accordance with the
+ terms of the Adobe license agreement accompanying it. If you have received this file from 
+ a source other than Adobe, then your use, modification, or distribution of it requires the 
+ prior written permission of Adobe.*/
+
+
+/************************************************/
+/*****cfdialog.css*/
+/***********************************************/
+
+/* Dialog styles */
+
+yuiextdlg{
+visibility:hidden;
+position:absolute;
+top:0px;    
+}
+
+/************************************************/
+/*****cfpod.css*/
+/***********************************************/
+.ypod{
+	z-index:1;
+	overflow:hidden;
+}
+
+.ypod .ypod-hd {
+	background: url(../ext/images/default/basic-dialog/hd-sprite_flex.gif) repeat-x 0px -82px;
+	color:#FFF;
+	overflow:hidden;
+	font:bold 12px "sans serif", tahoma, verdana, helvetica;
+	padding:5px;
+}
+
+.ypod .ypod-hd-left {
+	background: url(../ext/images/default/basic-dialog/hd-sprite_flex.gif) no-repeat 0px -41px;
+	padding-left:3px;
+	margin:0px;
+}
+
+.ypod .ypod-hd-right {
+	background: url(../ext/images/default/basic-dialog/hd-sprite_flex.gif) no-repeat right 0px;
+	padding-right:3px;
+}
+
+.ypod .ypod-bgcolor-hd {
+	color:#FFF;
+	font:bold 12px "sans serif", tahoma, verdana, helvetica;
+	padding-bottom:5px;
+	padding-left:3px;
+}
+
+.ypod .ypod-dlg-body{
+	background-color:white;
+	border:3px solid #C1CCD0;
+	border-top:0px none;
+	padding:10px;
+}
+
+
+/************************************************/
+/*****cfautosuggest.css*/
+/***********************************************/
+	div.autosuggest
+	{
+		position:relative;
+		float:left;
+	}
+
+	input.autosuggestinput
+	{
+		z-index:0;
+	}
+	
+	div.autosuggestcontainer 
+	{	
+		position:absolute;
+		top:1.5em;
+		width:100%;	
+	}
+
+    div.autosuggestcontainer .yui-ac-content
+	{
+		position:absolute;
+		width:100%;border:1px solid #CCCCCC;
+		background:#434241;overflow:hidden;
+		z-index:9050;
+	}
+
+    div.autosuggestcontainer .yui-ac-shadow
+	{
+		position:absolute;
+		margin:.3em;width:100%;
+		background:#CCCCCC;
+		z-index:9049;
+	}
+
+    div.autosuggestcontainer ul
+	{
+		padding:5px 0;
+		width:100%;
+		margin:0;
+		padding:0;
+	}
+
+    div.autosuggestcontainer li
+	{
+		padding:0 5px;
+		width:100%;
+		cursor:default;
+		white-space:nowrap;
+		margin:0;
+		padding:0;
+	}
+
+    div.autosuggestcontainer li.yui-ac-highlight
+	{
+		/*background:#7FCDFE;*/
+		background: #CC6600;
+	}
+
+    div.autosuggestcontainer li.yui-ac-prehighlight
+	{
+		/*background:#AADEFF;*/
+		background: #FF8800;
+	}
+
+/**************************************/
+/** cfcalendar.css **/
+/***************************************/
+	input.datefieldinput
+	{
+		z-index:0;
+	}
+
+/**************************************/
+/** cftoolbar.css **/
+/***************************************/
+.ytoolbar .cftoolbarbutton { 
+	width:100%;	
+}
+
+/**************************************/
+/** corners css **/
+/***************************************/
+b.corner{display:block;background: transparent}
+b.corner b{display:block;height: 1px;
+    overflow: hidden; background: transparent}
+b.filler1{margin: 0 5px}
+b.filler2{margin: 0 3px}
+b.filler3{margin: 0 2px}
+b.corner b.filler4{margin: 0 1px;height: 2px}
+
+/**************************************/
+/** wowlemmings.css **/
+/***************************************/
+body {
+	margin: 0;
+	background: #434241;
+}
+body, td, th {
+	font-family: Arial, Helvetica, sans-serif, Trebuchet MS;
+	font-size: 12px;
+	color: #FFF;
+}
+.clr {
+	clear: both;
+}
+h1 {
+	margin: 0;
+	padding: 0;
+	font-size: 40px;
+}
+a, a:link {
+	color:#ff8000;
+}
+a:visited {
+	color:#cc6600;
+}
+#container {
+	margin: 60px auto;
+	width: 960px;
+}
+#header {
+	margin: 0;
+	padding: 0 0 0 10px;
+	width: 960px;
+}
+#advert {
+	margin: 0;
+	border: 1px solid #FF8000;
+}
+#advert_noborder {
+	margin: 0;
+}
+.tagline {
+	margin: 0;
+	padding: 0 0 0 150px;
+	font-size: 24px;
+	font-style: italic;
+}
+#mainSearch {
+	margin: 0 auto;
+	border: 1px solid #000000;
+	border-right: none;
+	border-bottom: none;
+}
+#mainSearch td {
+	margin: 0 20px;
+	padding: 0;
+	font-weight: bold;
+	border-right: 1px solid #000000;
+	border-top: none;
+	border-bottom: 1px solid #000000;
+	font-size: 14px;
+	text-align: center;
+	vertical-align: top;
+}
+#mainSearch p {
+	margin: 0;
+	padding: 10px 0;
+}
+#keywordSearch {
+	margin: 0 auto;
+	border: none;
+	border-right: none;
+	border-bottom: none;
+}
+#keywordSearch td {
+	margin: 0 20px;
+	padding: 6px;
+	font-weight: bold;
+	border-right: none;
+	border-top: none;
+	border-bottom: none;
+	font-size: 14px;
+	text-align: center;
+	vertical-align: top;
+}
+#content {
+	margin: 0;
+	padding: 20px 0 0 0;
+	width: 960px;
+}
+#legend {
+	margin: 30px 0 0 10px;
+	padding: 0 10px 0 0;
+	width: 120px;
+	float: left;
+}
+#legend td {
+	padding: 0 2px 0 0;
+	font-size: 9px;
+}
+#legend p {
+	font-size: 9px;
+}
+#legend td.realm_match {
+	margin: 0;
+	padding: 0 10px;
+	border-top: 1px solid #FDD017;
+	border-left: 1px solid #FDD017;
+	border-bottom: 1px solid #FDD017;
+	border-right: 1px solid #FDD017;
+}
+#legend td.north_america {
+	background:url(data:image/gif;base64,R0lGODlhCwALAIAAAP////8AACH5BAAAAAAALAAAAAALAAsAAAIUjI+pCNcJ3mNStWtNzGFDt4RiUAAAOw==) top left no-repeat;
+	height: 11px;
+	width: 11px;
+}
+#legend td.europe {
+	background:url(data:image/gif;base64,R0lGODlhCwALAIAAAP///wAA/yH5BAAAAAAALAAAAAALAAsAAAISjI+pCN0K1okyuJeo1OvyChoFADs=) top left no-repeat;
+	height: 11px;
+	width: 11px;
+}
+.transfer_match {
+	background: #347C2C;
+	width: 8px;		
+}
+.transfer_carebear {
+	background: #7F525D;
+	width: 8px;
+}
+.transfer_gank {
+	background: #7E2217;
+	width: 8px;
+}
+.transfer_nomatch {
+	background: #ff0000;
+	width: 8px;		
+}
+.deathknight {
+	background: #bf0000;
+	width:8px;		
+}
+.druid {
+	background: #ff8000;
+	width: 8px;
+}
+.hunter {
+	background: #008000;
+	width:8px;
+}
+.mage {
+	background: #0080c0;
+	width:8px;
+}
+.monk {
+	background: #00ff96;
+	width:8px;
+}
+.paladin {
+	background: #ff00ff;
+	width:8px;
+}
+.priest {
+	background: #FFFFFF;
+	width:8px;
+}
+.rogue {
+	background: #ffff00;
+	width:8px;
+}
+.shaman {
+	background: #0000ff;
+	width:8px;
+}
+.warlock {
+	background: #800080;
+	width:8px;
+}
+.warrior {
+	background: #804000;
+	width:8px;
+}
+.unknown {
+	background: #c0c0c0;
+	width:8px;
+}
+#searchResults {
+	margin: 30px 0 0 0;
+	padding: 0;
+	float: left;
+}
+#searchResults table {
+	margin: 0;
+	padding: 0;
+	border-top: 1px solid #000000;
+	border-left: 1px solid #000000;
+	width: 800px;
+}
+#searchResults tr.realm_match td {
+	margin: 0;
+	padding: 0 10px;
+	border-top: 1px solid #FDD017;
+	border-left: 1px solid #FDD017;
+	border-bottom: 1px solid #FDD017;
+	border-right: 1px solid #FDD017;
+}	
+
+#searchResults td {
+	margin: 0;
+	padding: 0 10px;
+	border-bottom: 1px solid #000000;
+	border-right: 1px solid #000000;
+	height: 40px;
+}
+#searchResults td:hover {
+	background: #000;
+}	
+#searchResults .north_america {
+	background:url(data:image/gif;base64,R0lGODlhCwALAIAAAP////8AACH5BAAAAAAALAAAAAALAAsAAAIUjI+pCNcJ3mNStWtNzGFDt4RiUAAAOw==) center left no-repeat;
+}
+#searchResults .europe {
+	background:url(data:image/gif;base64,R0lGODlhCwALAIAAAP///wAA/yH5BAAAAAAALAAAAAALAAsAAAISjI+pCN0K1okyuJeo1OvyChoFADs=) center left no-repeat;
+}	
+#searchResults .deathknight {
+	background: #bf0000;
+	width: 20px;		
+}
+#searchResults .druid {
+	background: #ff8000;
+	width: 20px;
+}
+#searchResults .hunter {
+	background: #008000;
+	width: 20px;
+}
+#searchResults .mage {
+	background: #0080c0;
+	width: 20px;
+}
+#searchResults .monk {
+	background: #00ff96;
+	width: 20px;
+}
+#searchResults .paladin {
+	background: #ff00ff;
+	width: 20px;
+}
+#searchResults .priest {
+	background: #FFFFFF;
+	color: #000000;
+	width: 20px;
+}
+#searchResults .rogue {
+	background: #ffff00;
+	color: #000000;
+	width: 20px;
+}
+#searchResults .shaman {
+	background: #0000ff;
+	width: 20px;
+}
+#searchResults .warlock {
+	background: #800080;
+	width: 20px;
+}
+#searchResults .warrior {
+	background: #804000;
+	width: 20px;
+}
+#searchResults .unknown {
+	background: #c0c0c0;
+	color: #000000;
+	width: 20px;
+}
+/* pagination and links table */
+
+#searchResults table.aboutUs td:hover {
+    background: transparent;
+}	
+
+/*---------- bubble tooltip -----------*/
+a.tt{
+    position:relative;
+    z-index:24;
+    color:#ff8000;		
+    text-decoration:none;
+}
+a.tt:visited {
+	color:#cc6600;
+}
+a.tt span{ display: none; }
+
+/*background:; ie hack, something must be changed in a for ie to execute it*/
+a.tt:hover{ z-index:25; color: #aaaaff; background:;}
+a.tt:hover span.tooltip{
+    display:block;
+    position:absolute;
+    top:0px; left:0;
+	padding: 15px 0 0 0;
+	width:200px;
+	color: #993300;
+    text-align: center;
+	filter: alpha(opacity:90);
+	KHTMLOpacity: 0.90;
+	MozOpacity: 0.90;
+	opacity: 0.90;
+}
+a.tt:hover span.top{
+	display: block;
+	padding: 30px 8px 0;
+    background: url(data:image/gif;base64,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) no-repeat top;
+}
+a.tt:hover span.middle{ /* different middle bg for stretch */
+	display: block;
+	padding: 0 8px; 
+	background: url(data:image/gif;base64,R0lGODlhyAACAJEAAOjr0uHn0qSzrwAAACH5BAAHAP8ALAAAAADIAAIAAAIYlIKpy+0Po0Rg2ouz3skYDoZXJZbmqRkFADs=) repeat bottom; 
+}
+a.tt:hover span.bottom{
+	display: block;
+	padding:3px 8px 10px;
+	color: #548912;
+    background: url(data:image/gif;base64,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) no-repeat bottom;
+}

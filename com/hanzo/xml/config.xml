@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+	<datasource>GuildRSS</datasource>
+	<server>Deathwing</server>
+	<locale>us</locale>
+	<guild>Descendants of Draenor</guild>
+	<namesPerFeed>5</namesPerFeed>
+	<maxRank>7</maxRank>
+	<maxThreads>4</maxThreads>
+	<threadTimeout>60</threadTimeout>
+	<maxElements>100</maxElements>
+	<purgeThreshold>4000</purgeThreshold>
+	<feedName>Descendants of Draenor - RSS Feed</feedName>
+	<feedDescription>If we don't die...it shows up in this RSS feed.</feedDescription>
+	<feedURL>http://www.wowlemmings.com/guildrss/guildrss.cfm</feedURL>
+</config>

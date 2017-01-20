@@ -359,7 +359,7 @@
 	<META NAME="Keywords" CONTENT="World of Warcraft, Guild, Recruitment, Guildies, Guild Search, Recruiting, Player, Player Search, Class, Class Search, Faction, Faction Search, PvP, PvE, Alliance, Horde, Rogue, Shaman, Druid, Death Knight, Warrior, Warlock, Hunter, Priest, Paladin, Monk, GROM, Guild Online Recruitment Mechanism, AdServer, Advertising, Advertisement">
 	<title>WoW Lemmings : Rebuild your guild.</title>
 	<link rel="alternate" type="application/rss+xml" title="WoW Lemmings" href="<cfoutput>#getRSS()#</cfoutput>" />
-	<!--- <link href="/css/wowlemmings.cfm" rel="stylesheet" type="text/css" /> hanzo: added to the bottom of /resources/css/cf.css --->
+	<link href="/css/wowlemmings.cfm" rel="stylesheet" type="text/css" /> <!--- hanzo: added to the bottom of /resources/css/cf.css --->
 	<script language="Javascript">
 	function doAlert() {
 		var pay = readCookie('lemmingspay');
@@ -473,10 +473,7 @@
 				<tr>
 					<td>Keyword Filter</td>
 					<td><cfinput type="text" 
-								name="keyword" 
-								autosuggest="url:suggestList.cfm?{cfautosuggestvalue}" 
-								autosuggestMinLength="2"
-								showAutosuggestLoadingIcon="false"
+								name="keyword"								
 								value="#keyword#"></td>
 				</tr>
 			</table>
@@ -706,6 +703,7 @@
 		<tr>
 			<td>&nbsp;</td>
 		</tr>
+		<cftry>
 		<tr>
 			<td>Alliance: <cfoutput>#stats.NumAlliance# (#decimalFormat(evaluate((100/stats.NumPosts) * stats.NumAlliance))#%)</cfoutput></td>
 		</tr>	
@@ -777,7 +775,9 @@
 		</tr>					
 		<tr>
 			<td>Armory Links: <cfoutput>#stats.NumArmory# (#decimalFormat(evaluate((100/stats.NumPosts) * stats.NumArmory))#%)</cfoutput></td>
-		</tr>	
+		</tr>
+		<cfcatch type="any"></cfcatch>
+		</cftry>
 		<tr>
 			<td>&nbsp;</td>
 		</tr>

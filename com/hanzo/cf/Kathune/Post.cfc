@@ -11,6 +11,7 @@
 		<cfargument name="isPvE" type="boolean" required="false" default="false" />
 		<cfargument name="isIdiot" type="boolean" required="false" default="false" />
 		<cfargument name="isDeathKnight" type="boolean" required="false" default="false" />
+		<cfargument name="isDemonHunter" type="boolean" required="false" default="false" />
 		<cfargument name="isDruid" type="boolean" required="false" default="false" />
 		<cfargument name="isHunter" type="boolean" required="false" default="false" />
 		<cfargument name="isMage" type="boolean" required="false" default="false" />
@@ -40,6 +41,7 @@
 		variables.instanceData.isPvE 			= arguments.isPvE;
 		variables.instanceData.isIdiot 			= arguments.isIdiot;
 		variables.instanceData.isDeathKnight 	= arguments.isDeathKnight;
+		variables.instanceData.isDemonHunter	= arguments.isDemonHunter;
 		variables.instanceData.isDruid 			= arguments.isDruid;
 		variables.instanceData.isHunter 		= arguments.isHunter;
 		variables.instanceData.isMage 			= arguments.isMage;
@@ -182,6 +184,18 @@
 		<cfargument name="isDeathKnight" type="boolean" required="true" />
 		
 		<cfset variables.instanceData.isDeathKnight = arguments.isDeathKnight />
+	</cffunction>	
+
+	<cffunction name="getIsDemonHunter" returntype="boolean" access="public" output="false">
+		
+		<cfreturn variables.instanceData.isDemonHunter />
+		
+	</cffunction>
+
+	<cffunction name="setIsDemonHunter" returntype="void" access="public" output="false">
+		<cfargument name="isDemonHunter" type="boolean" required="true" />
+		
+		<cfset variables.instanceData.isDemonHunter = arguments.isDemonHunter />
 	</cffunction>	
 	
 	<cffunction name="getIsDruid" returntype="boolean" access="public" output="false">
@@ -408,6 +422,12 @@
 		<cfreturn boolToInt(getIsDeathKnight()) />
 		
 	</cffunction>
+
+	<cffunction name="isDemonHunter" returntype="numeric" access="public" output="false">
+		
+		<cfreturn boolToInt(getIsDemonHunter()) />
+		
+	</cffunction>	
 	
 	<cffunction name="isDruid" returntype="numeric" access="public" output="false">
 		

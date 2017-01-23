@@ -15,8 +15,8 @@
 		<cfset setHook('threads')>
 		<cfset setThreadURL('http://www.mmo-champion.com') />		
 		<!--- <cfset setLinkRegularExpression('<span id="msg_[0-9]+"><a href="http://www.mmo-champion.com/index.php\?PHPSESSID=[^&]+&amp;topic=([^>]+)">([^<]+)</a></span>') /> --->
-		<cfset setLinkRegularExpression('<a class="title" href="threads/([^"]+)" id="[^"]+">([^<]+)</a>') />
-		<cfset setBodyRegularExpression('<div id="post_message_[0-9]+">\s*<blockquote class="postcontent restore ">(.+?)</blockquote>\s*</div>') />		
+		<cfset setLinkRegularExpression('<a class="title" href="threads/([^"]+)" id="[^"]+">([^<]+)<\/a>') />
+		<cfset setBodyRegularExpression('<div id="post_message_[0-9]+">\s+(?:<blockquote class="postcontent restore ">)([\s\S]+?)(?:<\/blockquote>)') />		
 		
 		<cfreturn super.init( arguments.settings ) />
 	</cffunction>

@@ -104,6 +104,8 @@
 		<cfreturn "yellow">
 	<cfelseif data.isDeathKnight[row]>
 		<cfreturn "bf0000">
+	<cfelseif data.isDemonHunter[row]>
+		<cfreturn "a330c9">
 	<cfelseif data.isDruid[row]>
 		<cfreturn "orange">
 	<cfelseif data.isShaman[row]>
@@ -135,6 +137,8 @@
 		<cfreturn "rogue">
 	<cfelseif data.isDeathKnight[row]>
 		<cfreturn "deathknight">
+	<cfelseif data.isDemonHunter[row]>
+		<cfreturn "demonhunter">
 	<cfelseif data.isDruid[row]>
 		<cfreturn "druid">
 	<cfelseif data.isShaman[row]>
@@ -174,6 +178,11 @@
 	
 	<cfif data.isDeathKnight[row]>
 		<cfset strList = strList & "Dk" />
+		<cfset count = count + 1 />
+	</cfif>
+
+	<cfif data.isDemonHunter[row]>
+		<cfset strList = strList & "Dh" />
 		<cfset count = count + 1 />
 	</cfif>
 	
@@ -448,6 +457,7 @@
             <select name="clas">
 						<option value=""<cfif clas is ""> selected</cfif>>Any</option>
 						<option value="deth"<cfif clas is "deth"> selected</cfif>>Death Knight</option>
+						<option value="demo"<cfif clas is "demo"> selected</cfif>>Demon Hunter</option>
 						<option value="drui"<cfif clas is "drui"> selected</cfif>>Druid</option>
 						<option value="hunt"<cfif clas is "hunt"> selected</cfif>>Hunter</option>
 						<option value="mage"<cfif clas is "mage"> selected</cfif>>Mage</option>
@@ -531,6 +541,11 @@
           <td class="deathknight"></td>
           <td></td>
           <td>Death Knight (Dk)</td>
+        </tr>
+        <tr>
+        <td class="demonhunter"></td>
+          <td></td>
+          <td>Demon Hunter (Dh)</td>
         </tr>
         <tr>
           <td class="druid"></td>
@@ -730,6 +745,9 @@
 		</tr>
 		<tr>
 			<td>Death Knights: <cfoutput>#stats.NumDeathKnights# (#decimalFormat(evaluate((100/stats.NumPosts) * stats.NumDeathKnights))#%)</cfoutput></td>
+		</tr>
+		<tr>
+			<td>Demon Hunters: <cfoutput>#stats.NumDemonHunters# (#decimalFormat(evaluate((100/stats.NumPosts) * stats.NumDemonHunters))#%)</cfoutput></td>
 		</tr>	
 		<tr>
 			<td>Druids: <cfoutput>#stats.NumDruids# (#decimalFormat(evaluate((100/stats.NumPosts) * stats.NumDruids))#%)</cfoutput></td>

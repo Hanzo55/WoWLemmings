@@ -88,6 +88,11 @@
 		</cfloop>
 		
 		<cflog file="Kathune" type="information" text="init() - Successfully loaded #ArrayLen(variables.tentacles)# tentacles into memory">
+
+		<!--- regardless of thread max, don't spawn more threads than tentacles you've *actually* loaded --->
+		<cfif variables.httpFetchMaximum gt ArrayLen(variables.tentacles)>
+			<cfset variables.httpFetchMaximum = ArrayLen(variables.tentacles) />
+		</cfif>
 		
 		<cfreturn this />
 	</cffunction>
@@ -104,6 +109,7 @@
 			<cfset StructInsert( arguments.searchData, 'pve', '' ) />
 			<cfset StructInsert( arguments.searchData, 'pvp', '' ) />
 			<cfset StructInsert( arguments.searchData, 'deth', '' ) />
+			<cfset StructInsert( arguments.searchData, 'demo', '' ) />	
 			<cfset StructInsert( arguments.searchData, 'drui', '' ) />
 			<cfset StructInsert( arguments.searchData, 'hunt', '' ) />
 			<cfset StructInsert( arguments.searchData, 'mage', '' ) />
@@ -156,6 +162,7 @@
 
 		<cfset var theRecruit = 0 />
 		<cfset var countDK = 0 />
+		<cfset var countDH = 0 />
 		<cfset var countDruid = 0 />
 		<cfset var countHunter = 0 />
 		<cfset var countMage = 0 />
@@ -177,6 +184,9 @@
 			<cfloop array="#variables.NewRecruitQueue#" index="theRecruit">
 				<cfif (theRecruit.isDeathKnight[1])>
 					<cfset countDK++ />
+				</cfif>
+				<cfif (theRecrut.isDemonHunter[1])>
+					<cfset countDH++ />
 				</cfif>
 				<cfif (theRecruit.isDruid[1])>
 					<cfset countDruid++ />
@@ -212,6 +222,7 @@
 			
 			<!--- build middle part of the string --->
 			<cfset middleString = ListAppendClass(middleString, 'Death Knight', countDK) />
+			<cfset middleString = ListAppendClass(middleString, 'Demon Hunter', countDH) />
 			<cfset middleString = ListAppendClass(middleString, 'Druid', countDruid) />
 			<cfset middleString = ListAppendClass(middleString, 'Hunter', countHunter) />
 			<cfset middleString = ListAppendClass(middleString, 'Mage', countMage) />
@@ -466,7 +477,7 @@
 		</cfif>
 		
 		<!--- we're only going to look at classes, everything is disregarded for now --->
-		<cfif ListFind('deth,drui,hunt,mage,monk,pala,prie,rogu,sham,warl,warr', arguments.term)>
+		<cfif ListFind('deth,demo,drui,hunt,mage,monk,pala,prie,rogu,sham,warl,warr', arguments.term)>
 			<cfreturn ListAppendClass(arguments.theList, GetClassFromTerm(arguments.term), arguments.count+1, false) /> <!--- the +1 guarantees that there are always a plural # of classes to make the grammar correct --->
 		<cfelse>
 			<!--- just return the list unchanged if not --->
@@ -485,11 +496,12 @@
 		<cfset var id = '' />
 	
 		<cfquery name="qLinks__FetchAllWithoutBodies" datasource="#variables.dsn#" blockfactor="#arguments.maxThreads#">
-			SELECT TOP #arguments.maxThreads# l.*, s.SiteUUID, s.Hook
+			SELECT l.*, s.SiteUUID, s.Hook
 			FROM Links l
 				INNER JOIN Sites s ON (l.PostID = s.PostID)
 			WHERE (l.PostBody = '' OR l.PostBody IS NULL)
-			ORDER BY l.PostID		
+			ORDER BY l.PostID
+			FETCH FIRST #arguments.maxThreads# ROWS ONLY
 		</cfquery>
 		
 		<cfif qLinks__FetchAllWithoutBodies.recordcount>
@@ -525,7 +537,6 @@
 						<cfset armoryURL = tentacle.fetchArmoryURLFromPost( postBody ) />
 						
 						<cfquery name="qUpdateLink__Feed_thread#tID#" datasource="#variables.dsn#">
-							set nocount on;
 							UPDATE Links
 								SET PostBody = '#postBody#',
 									ArmoryURL = '#armoryURL#'
@@ -537,7 +548,6 @@
 					<cfelse>
 					
 						<cfquery name="qPurgeLink__Feed_thread#tID#" datasource="#variables.dsn#">
-							set nocount on;
 							DELETE FROM Sites WHERE PostID = #tPostID#;
 							DELETE FROM Links WHERE PostID = #tPostID#;
 						</cfquery>	
@@ -595,7 +605,7 @@
 		<cfargument name="class" type="string" required="true" />
 		
 		<cfset var sql = '' />
-		<cfset var classes = 'DeathKnight,Druid,Hunter,Mage,Monk,Paladin,Priest,Rogue,Shaman,Warlock,Warrior' />
+		<cfset var classes = 'DeathKnight,DemonHunter,Druid,Hunter,Mage,Monk,Paladin,Priest,Rogue,Shaman,Warlock,Warrior' />
 		<cfset var thisClass = '' />
 		
 		<cfloop list="#classes#" index="thisClass">
@@ -613,6 +623,7 @@
 		<cfargument name="row" type="numeric" required="false" default="1">
 		
 		<cfif arguments.dataQuery.isDeathKnight[arguments.row] eq 0 and 
+			  arguments.dataQuery.isDemonHunter[arguments.row] eq 0 and
 			  arguments.dataQuery.isDruid[arguments.row] eq 0 and
 			  arguments.dataQuery.isHunter[arguments.row] eq 0 and
 			  arguments.dataQuery.isMage[arguments.row] eq 0 and
@@ -803,7 +814,6 @@
 		</cfif>
 		
 		<cfquery name="qUpdateLink__WithArmory" datasource="#variables.dsn#">
-			set nocount on;
 			UPDATE Links
 				SET score = #finalScore#<cfif not structIsEmpty(data)>,
 				isPvP = #data.isPvP#,
@@ -856,7 +866,6 @@
 		</cfif>
 
 		<cfquery name="qUpdateLink__WithoutArmory" datasource="#variables.dsn#">
-			set nocount on;
 			UPDATE Links
 				SET score = #finalScore#
 			WHERE PostID = #arguments.postID#
@@ -876,12 +885,13 @@
 		<cfset var id = '' />
 	
 		<cfquery name="qLinks__FetchAllWithBaseScore" datasource="#variables.dsn#" blockfactor="#arguments.maxThreads#">
-			SELECT TOP #arguments.maxThreads# l.*, s.SiteUUID, s.Hook
+			SELECT l.*, s.SiteUUID, s.Hook
 			FROM Links l
 				INNER JOIN Sites s ON (l.PostID = s.PostID)
 			WHERE (l.PostBody <> '' AND l.PostBody IS NOT NULL)
 			AND (l.Score = 1)
-			ORDER BY l.PostID		
+			ORDER BY l.PostID
+			FETCH FIRST #arguments.maxThreads# ROWS ONLY		
 		</cfquery>
 		
 		<cfif qLinks__FetchAllWithBaseScore.recordcount>
@@ -952,6 +962,7 @@
 			var NumIdiots 			= 0;
 			var NumDruids 			= 0;
 			var NumDeathKnights 	= 0;
+			var NumDemonHunters		= 0;
 			var NumHunters 			= 0;
 			var NumMages 			= 0;
 			var NumMonks			= 0;
@@ -1060,6 +1071,16 @@
 			
 			<cfset NumDeathKnights = statSevenPointFive.NumDeathKnights />					
 			
+			<cfquery name="statSevenPointSevenFive" datasource="#variables.dsn#">
+				SELECT count(PostID) as NumDemonHunters
+				FROM LINKS
+				WHERE EffectiveDate >= #CreateODBCDate(checkDateStart)#
+				AND EffectiveDate <= #CreateODBCDate(checkDateEnd)#
+				AND isDemonHunter = 1				
+			</cfquery>
+			
+			<cfset NumDemonHunters = statSevenPointSevenFive.NumDemonHunters />					
+
 			<cfquery name="statEight" datasource="#variables.dsn#">
 				SELECT count(PostID) as NumHunters
 				FROM Links
@@ -1183,7 +1204,6 @@
 
 			<!--- we've got em! now let's cache them into History --->
 			<cfquery name="ins" datasource="#variables.dsn#">
-				set nocount on;				
 				INSERT INTO History (
 					EffectiveDate,
 					NumPosts,
@@ -1193,6 +1213,7 @@
 					NumPvE,
 					NumIdiots,
 					NumDeathKnights,
+					NumDemonHunters,
 					NumDruids,
 					NumHunters,
 					NumMages,
@@ -1215,6 +1236,7 @@
 					#NumPvE#,
 					#NumIdiots#,
 					#NumDeathKnights#,
+					#NumDemonHunters#,
 					#NumDruids#,
 					#NumHunters#,
 					#NumMages#,
@@ -1240,7 +1262,7 @@
 	
 		<cfset var i = 0 />
 		<cfset var id = '' />
-		 
+
 		<cfloop from="1" to="#variables.httpFetchMaximum#" index="i">
 			
 			<cfset variables.activeTentacle = variables.activeTentacle + 1 />
@@ -1265,16 +1287,6 @@
 		
 		</cfloop>
 		
-		<!---
-		DEBUG ONLY:
-		 join threads to master for dumping, only required for debugging/display in this method. In production, Kathune will fire-and-forget threads. --->
-		<!--- <cfthread action="join" name="thread1,thread2,thread3,thread4,thread5" timeout="#evaluate(15*1000*arrayLen(variables.tentacles))#" /> <!--- timeout should become 15*1000*(num threads) --->
-		<cfdump var=#cfthread.thread1#>
-		<cfdump var=#cfthread.thread2#>
-		<cfdump var=#cfthread.thread3#>
-		<cfdump var=#cfthread.thread4#>
-		<cfdump var=#cfthread.thread5#> --->
-		<!--- <cfabort/> --->
 	</cffunction>
 	
 	<cffunction name="RetrieveFoodFromTentacle" returntype="void" access="private" output="false"
@@ -1284,7 +1296,7 @@
 		<cfset var postArray = arguments.tentacle.getPostsAsObjectArray() />
 		<cfset var thisPostObj = 0 />
 		<cfset var i = 0 />
-		
+
 		<cfloop from="1" to="#arrayLen(postArray)#" index="i">
 			<cfset thisPostObj = postArray[i] />
 			
@@ -1294,7 +1306,6 @@
 				<cftransaction>
 					
 					<cfquery name="qInsert" datasource="#variables.dsn#">
-						set nocount on;
 						insert into Links(PostURL, 
 							  PostTitle, 
 							  PostBody,
@@ -1304,6 +1315,7 @@
 							  isPvE,
 							  isIdiot,
 							  isDeathKnight,
+							  isDemonHunter,
 							  isDruid,
 							  isHunter,
 							  isMage,
@@ -1326,6 +1338,7 @@
 							   #thisPostObj.isPvE()#,
 							   #thisPostObj.isIdiot()#,
 							   #thisPostObj.isDeathKnight()#,
+							   #thisPostObj.isDemonHunter()#,
 							   #thisPostObj.isDruid()#,
 							   #thisPostObj.isHunter()#,
 							   #thisPostObj.isMage()#,
@@ -1338,8 +1351,8 @@
 							   #thisPostObj.isWarrior()#,
 							   #thisPostObj.getScore()#,
 							   '#thisPostObj.getRegion()#',
-							   '#thisPostObj.getArmoryURL()#');
-						SELECT @@IDENTITY AS IDENTITY_PKEY; 							   
+							   '#thisPostObj.getArmoryURL()#')
+						returning postid AS IDENTITY_PKEY;
 					</cfquery>
 					
 					<cfset thisPostObj.setPostID(qInsert.IDENTITY_PKEY) />
@@ -1374,7 +1387,7 @@
 	<cffunction name="PostExists" returntype="boolean" access="private" output="false">
 		<cfargument name="siteuuid" type="string" required="true" />
 		<cfargument name="hook" type="string" required="true" />
-		
+
 		<cfquery name="qTestForPost" datasource="#variables.dsn#">
 			SELECT l.PostID
 			FROM Links l
@@ -1382,6 +1395,8 @@
 			WHERE s.Hook = '#arguments.hook#'
 			AND s.SiteUUID = '#arguments.siteuuid#'
 		</cfquery>
+
+		<!--- <cflog file="Kathune" type="information" text="PostExists() Records: #qTestForPost.RecordCount# - SQL: SELECT l.PostID FROM Links l INNER JOIN Sites s ON (l.PostID = s.PostID) WHERE s.Hook = '#arguments.hook#' AND s.SiteUUID = '#arguments.siteuuid#'"> --->
 		
 		<cfreturn (qTestForPost.recordCount gt 0) />
 	</cffunction>
@@ -1456,6 +1471,8 @@
 					title = title & 'Rogues ';
 				else if (arguments.clas is "deth")
 					title = title & 'Death Knights ';
+				else if (arguments.clas is "demo")
+					title = title & 'Demon Hunters ';
 				else if (arguments.clas is "drui")
 					title = title & 'Druids ';
 				else if (arguments.clas is "mage")
@@ -1562,6 +1579,8 @@
 				AND isRogue = 1
 			<cfelseif arguments.clas is "deth">
 				AND isDeathKnight = 1
+			<cfelseif arguments.clas is "demo">
+				AND isDemonHunter = 1
 			<cfelseif arguments.clas is "drui">
 				AND isDruid = 1
 			<cfelseif arguments.clas is "mage">
@@ -1631,6 +1650,8 @@
 					AND isRogue = 1
 				<cfelseif arguments.clas is "deth">
 					AND isDeathKnight = 1
+				<cfelseif arguments.clas is "demo">
+					AND isDemonHunter = 1
 				<cfelseif arguments.clas is "drui">
 					AND isDruid = 1
 				<cfelseif arguments.clas is "mage">
@@ -1723,6 +1744,9 @@
 		<cfswitch expression="#arguments.term#">
 			<cfcase value="deth">
 				<cfreturn "Death Knight" />
+			</cfcase>
+			<cfcase value="demo">
+				<cfreturn "Demon Hunter" />
 			</cfcase>
 			<cfcase value="drui">
 				<cfreturn "Druid" />

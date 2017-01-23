@@ -8,18 +8,19 @@
 	variables.hPos			= 1; // hook position in reg exp
 	variables.tPos			= 2; // title position in reg exp
 	
-	variables.class 		= 'rogue|druid|feral|warr|prot war|fury war|arms war|priest|sham|hunter|mage|lock|destro |pally|paladin|paly| pala |tankadin|retadin|healadin|holydin|loladin| dk |knight|death knight|deathknight|dethknight|dknight|deathk|dethk';
+	variables.class 		= 'rogue|rouge|sin |outlaw|druid|feral|boomkin|drood|balance|warr|prot war|fury war|arms war|priest|sham|hunter|mage|lock|destro |pally|paladin|paly| pala |tankadin|retadin|healadin|holydin|loladin| dk |knight|death knight|deathknight|dethknight|dknight|deathk|dethk| dh |demon hunter|demonhunter|dhunter|dhunt|demonh';
 	variables.bannedPhrases	= 'just got easier|lf healer|are you a|are you looking for a guild|looking for more members|look here';	
-	variables.rogue 		= 'rogue|rouge';
+	variables.rogue 		= 'rogue|rouge|outlaw|sin ';
 	variables.deathknight 	= ' dk |deathknight|death knight|dknight|deathk|dethknight|dethk';
-	variables.druid 		= 'druid|drood|feral';
+	variables.druid 		= 'druid|drood|feral|boomkin|balance';
 	variables.warrior 		= 'warr|prot war|fury war|arms war';
 	variables.priest 		= 'priest';
 	variables.shaman 		= 'sham';
 	variables.hunter 		= 'hunter|huner';
 	variables.mage 			= 'mage';
 	variables.monk			= 'monk|windwalker|windwaker|brewmaster|mistweaver';
-	variables.warlock 		= 'lock|destro ';
+	variables.demonhunter	= ' dh |demon hunter|demonhunter|dhunter|dhunt|demonh';
+	variables.warlock 		= 'lock|destro';
 	variables.paladin 		= 'pally|paly| pala |paladin|tankadin|retadin|healadin|holydin|loladin';
 	variables.role			= 'tank|healer|healbot|nuker|caster';
 	
@@ -225,7 +226,7 @@
 	<cffunction name="getPostsAsObjectArray" returntype="array" access="public" output="false">
 		<cfset var oArray = arrayNew(1) />
 		<cfset var postObj = 0 />
-		
+
 		<cfif isQuery(variables.postQuery) and variables.postQuery.recordcount>
 			<cfloop query="variables.postQuery">
 				<cfset postObj = CreatePostObjectFromQueryRow( variables.postQuery, currentRow ) />
@@ -257,7 +258,7 @@
 		<cfset postObject.setPostTitle( arguments.dataQuery.title[arguments.row] ) />
 		<cfset postObject.setHookValue( arguments.dataQuery.hook[arguments.row] ) />
 
-		<cfset postObject.setPostURL( getThreadByHook( postObject.getHookValue() ) ) />				
+		<cfset postObject.setPostURL( getThreadByHook( postObject.getHookValue() ) ) />	
 		
 		<cfreturn postObject />
 	</cffunction>
@@ -485,6 +486,10 @@
 			check = refindnocase( variables.monk, arguments.textString );
 			if (check)
 				arguments.data.isMonk = 1;
+
+			check = refindnocase( variables.demonhunter, arguments.textString );
+			if (check)
+				arguments.data.isDemonHunter = 1;
 		}
 		</cfscript>
 	</cffunction>
@@ -600,6 +605,7 @@
 		data.isPvP			= 0;
 		data.isPvE			= 0;
 		data.isDeathKnight 	= 0;	
+		data.isDemonHunter	= 0;
 		data.isRogue 		= 0;
 		data.isDruid 		= 0;
 		data.isWarrior 		= 0;	

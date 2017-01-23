@@ -3,11 +3,11 @@
 	<cffunction name="init" returntype="com.hanzo.cf.Kathune.tentacle.Blizzard.Europe.EuropeTentacle" access="public" output="false">
 		<cfargument name="settings" type="struct" required="true" />
 
-		<cfset setThreadURL('http://eu.battle.net/wow/en/forum') />
+		<cfset setThreadURL('https://eu.battle.net/forums/en/wow') />
 		
-		<cfset setForumURL('http://eu.battle.net/wow/en/forum/874708/') />
+		<cfset setForumURL('https://eu.battle.net/forums/en/wow/874708/') />
 		
-		<cfset setSource('Recruitment -> Forums -> World of Warcraft') />		
+		<cfset setSource('World of Warcraft -> Forums -> Looking For Players - PVE') />		
 		
 		<cfset setRegion('EU-EN') />
 		

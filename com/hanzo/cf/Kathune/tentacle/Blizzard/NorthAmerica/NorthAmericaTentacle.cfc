@@ -3,11 +3,11 @@
 	<cffunction name="init" returntype="com.hanzo.cf.Kathune.tentacle.Blizzard.NorthAmerica.NorthAmericaTentacle" access="public" output="false">
 		<cfargument name="settings" type="struct" required="true" />
 
-		<cfset setThreadURL('http://us.battle.net/wow/en/forum') />
+		<cfset setThreadURL('https://us.battle.net/forums/en/wow') />
 		
-		<cfset setForumURL('http://us.battle.net/wow/en/forum/1011639/') />
+		<cfset setForumURL('https://us.battle.net/forums/en/wow/1011639/') />
 		
-		<cfset setSource('Guild Recruitment -> Forums -> World of Warcraft') />		
+		<cfset setSource('World of Warcraft -> Forums -> Guild Recruitment') />		
 		
 		<cfset setRegion('US') />
 		

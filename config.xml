@@ -4,12 +4,14 @@
 	<tentacles>
 		<tentacle SiteUUID="96ea7dc0-8ca7-11dd-ad8b-0800200c9a66">Blizzard.NorthAmerica.NorthAmericaTentacle</tentacle>
 		<tentacle SiteUUID="96ea7dc2-8ca7-11dd-ad8b-0800200c9a66">Blizzard.Europe.EuropeTentacle</tentacle>
-		<tentacle SiteUUID="96ea7dc3-8ca7-11dd-ad8b-0800200c9a66">ShadowPriest.ShadowPriestTentacle</tentacle>
-		<tentacle SiteUUID="96ea7dc4-8ca7-11dd-ad8b-0800200c9a66">TankSpot.TankSpotTentacle</tentacle>
 		<tentacle SiteUUID="a62d4e40-9b32-11dd-ad8b-0800200c9a66">MMOChampion.NorthAmerica.PvPTentacle</tentacle>
 		<tentacle SiteUUID="a62d4e41-9b32-11dd-ad8b-0800200c9a66">MMOChampion.NorthAmerica.PvETentacle</tentacle>
 		<tentacle SiteUUID="a62d4e42-9b32-11dd-ad8b-0800200c9a66">MMOChampion.Europe.PvPTentacle</tentacle>
 		<tentacle SiteUUID="a62d4e43-9b32-11dd-ad8b-0800200c9a66">MMOChampion.Europe.PvETentacle</tentacle>
+		
+		<!--
+		<tentacle SiteUUID="96ea7dc3-8ca7-11dd-ad8b-0800200c9a66">ShadowPriest.ShadowPriestTentacle</tentacle>
+		<tentacle SiteUUID="96ea7dc4-8ca7-11dd-ad8b-0800200c9a66">TankSpot.TankSpotTentacle</tentacle>
 		<tentacle SiteUUID="8ff3b426-40b6-4513-8d14-f66fcfc34336">Wowhead.WowheadTentacle</tentacle>
 		<tentacle SiteUUID="8da90a7a-6362-42cb-981f-d0c23f926b24">BigRedKitty.BigRedKittyTentacle</tentacle>
 		<tentacle SiteUUID="0e2593a0-9d49-11dd-ad8b-0800200c9a66">WorldOfRaids.NorthAmerica.AllianceTentacle</tentacle>
@@ -35,6 +37,7 @@
 		<tentacle SiteUUID="dd47da00-ff92-46ae-af19-fbb63dcb4da4">DeathKnight.DeathKnightTentacle</tentacle>
 		<tentacle SiteUUID="656b0273-5270-45f1-b884-cd6be0281f18">LightNatured.LightNaturedTentacle</tentacle>
 		<tentacle SiteUUID="c78ec660-7924-11de-8a39-0800200c9a66">Maintankadin.MaintankadinTentacle</tentacle>
+		-->
 		
 		<!--
 

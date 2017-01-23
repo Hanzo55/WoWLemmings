@@ -4,17 +4,26 @@
 	settings.siteuuid = 'ABABFF';	
 	
 	obj = createObject('component','com.hanzo.cf.Kathune.tentacle.Blizzard.NorthAmerica.NorthAmericaTentacle').init(settings);
+	//obj = createObject('component','com.hanzo.cf.Kathune.tentacle.Blizzard.Europe.EuropeTentacle').init(settings);
 	
+
 	obj.Grab();
 </cfscript>
 
 <!--- blank page? try this line to see the raw HTML page: remember! cfdump will NOT work if you call dumprawfood. --->
 <!--- <textarea><cfoutput>#obj.DumpRawFood()#</cfoutput></textarea> --->
 
-<cfdump var=#obj#>
+<!--- <cfdump var=#obj#> --->
 
 <cfset myArr = obj.getPostsAsObjectArray() />
 
+<cfif ArrayLen(myArr)>
+OK
+<cfelse>
+ERROR
+</cfif>
+
+<!--- HANZO: if ERROR displayed, this part below won't do you much good--->
 <cfloop from="1" to="#arrayLen(myArr)#" index="i">
 	<cfset post = myArr[i] />
 	<cfset post.dump() />

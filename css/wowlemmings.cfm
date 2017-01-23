@@ -2,6 +2,7 @@
 	<cfheader name="Expires" value="#GetHttpTimeString(dateAdd('m', 1, now()) )#"> <!--- cache for 1 month --->
 	<cfheader name="Cache-Control" value="max-age=2592000"> <!--- cache for 1 month --->
 </cfsilent>
+<cfsetting showdebugoutput="false" />
 <cfcontent type="text/css">
 	body {
 		margin: 0;
@@ -135,6 +136,10 @@
 		background: #bf0000;
 		width:8px;		
 	}
+	.demonhunter {
+		background: #a330c9;
+		width:8px;
+	}
 	.druid {
 		background: #ff8000;
 		width: 8px;
@@ -145,6 +150,10 @@
 	}
 	.mage {
 		background: #0080c0;
+		width:8px;
+	}
+	.monk {
+		background: #00ff96;
 		width:8px;
 	}
 	.paladin {
@@ -216,6 +225,10 @@
 		background: #bf0000;
 		width: 20px;		
 	}
+	#searchResults .demonhunter {
+		background: #a330c9;
+		width: 20px;
+	}
 	#searchResults .druid {
 		background: #ff8000;
 		width: 20px;
@@ -226,6 +239,10 @@
 	}
 	#searchResults .mage {
 		background: #0080c0;
+		width: 20px;
+	}
+	#searchResults .monk {
+		background: #00ff96;
 		width: 20px;
 	}
 	#searchResults .paladin {

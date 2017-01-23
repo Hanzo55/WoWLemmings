@@ -543,7 +543,7 @@
 							WHERE PostID = #tPostID#
 						</cfquery>
 						
-						<cflog file="Kathune" type="information" text="__Feed_thread_#row#_#tID# - Post Eaten (Body: #len(postBody)# bytes, Armory: #iif(len(armoryURL),de('TRUE'),de('FALSE'))#)">
+						<cflog file="Kathune" type="information" text="__Feed_thread_#row#_#tID# - PostID: #tPostID# - Hook: #tHook# - Post Eaten (Body: #len(postBody)# bytes, Armory: #iif(len(armoryURL),de('TRUE'),de('FALSE'))#)">
 					
 					<cfelse>
 					
@@ -1738,6 +1738,11 @@
 	
 	
 	<!--- UTILITIES --->
+	<cffunction name="getMaxThreads" returntype="numeric" access="public" output="false">
+
+		<cfreturn variables.httpFetchMaximum />
+	</cffunction>
+
 	<cffunction name="getClassFromTerm" returntype="string" access="public" output="false">
 		<cfargument name="term" type="string" required="true" />
 		

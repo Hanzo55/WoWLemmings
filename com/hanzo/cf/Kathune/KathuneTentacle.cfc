@@ -8,7 +8,7 @@
 	variables.hPos			= 1; // hook position in reg exp
 	variables.tPos			= 2; // title position in reg exp
 	
-	variables.class 		= 'rogue|rouge|sin |outlaw|druid|feral|boomkin|drood|balance|warr|prot war|fury war|arms war|priest|sham|hunter|mage|lock|destro |pally|paladin|paly| pala |tankadin|retadin|healadin|holydin|loladin| dk |knight|death knight|deathknight|dethknight|dknight|deathk|dethk| dh |demon hunter|demonhunter|dhunter|dhunt|demonh';
+	variables.class 		= 'rogue|rouge|sin |outlaw|druid|feral|boomkin|drood|balance|warr|prot war|fury war|arms war|priest|sham|hunter|mage|lock|destro |pally|paladin|paly| pala |tankadin|retadin|healadin|holydin|loladin| dk |knight|death knight|deathknight|dethknight|dknight|deathk|dethk| dh |demon hunter|demonhunter|dhunter|dhunt|demonh|veng|havoc';
 	variables.bannedPhrases	= 'just got easier|lf healer|are you a|are you looking for a guild|looking for more members|look here';	
 	variables.rogue 		= 'rogue|rouge|outlaw|sin ';
 	variables.deathknight 	= ' dk |deathknight|death knight|dknight|deathk|dethknight|dethk';
@@ -19,7 +19,7 @@
 	variables.hunter 		= 'hunter|huner';
 	variables.mage 			= 'mage';
 	variables.monk			= 'monk|windwalker|windwaker|brewmaster|mistweaver';
-	variables.demonhunter	= ' dh |demon hunter|demonhunter|dhunter|dhunt|demonh';
+	variables.demonhunter	= ' dh |demon hunter|demonhunter|dhunter|dhunt|demonh|veng|havoc';
 	variables.warlock 		= 'lock|destro';
 	variables.paladin 		= 'pally|paly| pala |paladin|tankadin|retadin|healadin|holydin|loladin';
 	variables.role			= 'tank|healer|healbot|nuker|caster';

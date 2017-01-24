@@ -1292,81 +1292,87 @@
 	<cffunction name="RetrieveFoodFromTentacle" returntype="void" access="private" output="false"
 				hint="I examine an individual spider for fetched data, confirm that it has people looking for guilds, and insert only those into the db that I have not yet already collected. You are already dead.">
 		<cfargument name="tentacle" type="struct" required="true" />
-		
-		<cfset var postArray = arguments.tentacle.getPostsAsObjectArray() />
+
+		<cfset var postArray = 0 />
 		<cfset var thisPostObj = 0 />
 		<cfset var i = 0 />
 
-		<cfloop from="1" to="#arrayLen(postArray)#" index="i">
-			<cfset thisPostObj = postArray[i] />
-			
-			<!--- if the post has been scored as a person looking for a guild, and it doesn't already exist, insert --->
-			<cfif thisPostObj.getScore() gt 0 AND NOT PostExists( arguments.tentacle.getSiteUUID(), thisPostObj.getHookValue() )>
+		<cftransaction>
+		
+			<cfset postArray = arguments.tentacle.getPostsAsObjectArray() />
+
+			<cfloop from="1" to="#arrayLen(postArray)#" index="i">
+				<cfset thisPostObj = postArray[i] />
 				
-				<cftransaction>
-					
-					<cfquery name="qInsert" datasource="#variables.dsn#">
-						insert into Links(PostURL, 
-							  PostTitle, 
-							  PostBody,
-							  isAlliance,
-							  isHorde,
-							  isPvP,
-							  isPvE,
-							  isIdiot,
-							  isDeathKnight,
-							  isDemonHunter,
-							  isDruid,
-							  isHunter,
-							  isMage,
-							  isMonk,
-							  isPaladin,
-							  isPriest,
-							  isRogue,
-							  isShaman,
-							  isWarlock,
-							  isWarrior,
-							  Score,
-							  Region,
-							  ArmoryURL)
-						values('#thisPostObj.getPostURL()#',
-							   '#replace(thisPostObj.getPostTitle(),"'","''","ALL")#',
-							   '#thisPostObj.getPostBody()#',
-							   #thisPostObj.isAlliance()#,
-							   #thisPostObj.isHorde()#,
-							   #thisPostObj.isPvP()#,
-							   #thisPostObj.isPvE()#,
-							   #thisPostObj.isIdiot()#,
-							   #thisPostObj.isDeathKnight()#,
-							   #thisPostObj.isDemonHunter()#,
-							   #thisPostObj.isDruid()#,
-							   #thisPostObj.isHunter()#,
-							   #thisPostObj.isMage()#,
-							   #thisPostObj.isMonk()#,
-							   #thisPostObj.isPaladin()#,
-							   #thisPostObj.isPriest()#,
-							   #thisPostObj.isRogue()#,
-							   #thisPostObj.isShaman()#,
-							   #thisPostObj.isWarlock()#,
-							   #thisPostObj.isWarrior()#,
-							   #thisPostObj.getScore()#,
-							   '#thisPostObj.getRegion()#',
-							   '#thisPostObj.getArmoryURL()#')
-						returning postid AS IDENTITY_PKEY;
-					</cfquery>
-					
-					<cfset thisPostObj.setPostID(qInsert.IDENTITY_PKEY) />
-					
-					<cfquery name="ins_join" datasource="#variables.dsn#">
-						INSERT INTO Sites(PostID, SiteUUID, Hook)
-						VALUES(#thisPostObj.getPostID()#, '#arguments.tentacle.getSiteUUID()#', '#thisPostObj.getHookValue()#')
-					</cfquery>
-					
-				</cftransaction>
-				
-			</cfif>
-			
-		</cfloop>		
+					<!--- if the post has been scored as a person looking for a guild, and it doesn't already exist, insert --->
+					<cfif thisPostObj.getScore() gt 0 AND NOT PostExists( arguments.tentacle.getSiteUUID(), thisPostObj.getHookValue() )>
+						
+						<cfquery name="qInsert" datasource="#variables.dsn#">
+							insert into Links(PostURL, 
+								  PostTitle, 
+								  PostBody,
+								  isAlliance,
+								  isHorde,
+								  isPvP,
+								  isPvE,
+								  isIdiot,
+								  isDeathKnight,
+								  isDemonHunter,
+								  isDruid,
+								  isHunter,
+								  isMage,
+								  isMonk,
+								  isPaladin,
+								  isPriest,
+								  isRogue,
+								  isShaman,
+								  isWarlock,
+								  isWarrior,
+								  Score,
+								  Region,
+								  ArmoryURL)
+							values('#thisPostObj.getPostURL()#',
+								   '#replace(thisPostObj.getPostTitle(),"'","''","ALL")#',
+								   '#thisPostObj.getPostBody()#',
+								   #thisPostObj.isAlliance()#,
+								   #thisPostObj.isHorde()#,
+								   #thisPostObj.isPvP()#,
+								   #thisPostObj.isPvE()#,
+								   #thisPostObj.isIdiot()#,
+								   #thisPostObj.isDeathKnight()#,
+								   #thisPostObj.isDemonHunter()#,
+								   #thisPostObj.isDruid()#,
+								   #thisPostObj.isHunter()#,
+								   #thisPostObj.isMage()#,
+								   #thisPostObj.isMonk()#,
+								   #thisPostObj.isPaladin()#,
+								   #thisPostObj.isPriest()#,
+								   #thisPostObj.isRogue()#,
+								   #thisPostObj.isShaman()#,
+								   #thisPostObj.isWarlock()#,
+								   #thisPostObj.isWarrior()#,
+								   #thisPostObj.getScore()#,
+								   '#thisPostObj.getRegion()#',
+								   '#thisPostObj.getArmoryURL()#')
+							returning postid AS IDENTITY_PKEY;
+						</cfquery>
+						
+						<cfset thisPostObj.setPostID(qInsert.IDENTITY_PKEY) />
+						
+						<cfquery name="ins_join" datasource="#variables.dsn#">
+							INSERT INTO Sites(PostID, SiteUUID, Hook)
+							VALUES(#thisPostObj.getPostID()#, '#arguments.tentacle.getSiteUUID()#', '#thisPostObj.getHookValue()#')
+						</cfquery>
+						
+					</cfif>
+
+			</cfloop>
+
+			<!--- we've processed all the html for this one set of posts, so force the tentacle to dump its local cache
+			(I suspect shared memory issues here when working on a thread) --->
+			<cfset arguments.tentacle.Purge() />		
+
+		</cftransaction>			
 	</cffunction>
 	
 	<cffunction name="getTentacleBySiteUUID" returntype="com.hanzo.cf.Kathune.KathuneTentacle" access="private" output="false">
@@ -1609,7 +1615,7 @@
 				AND Region = 'EU-EN'
 			</cfif>
 			<cfif len(trim(arguments.keyword))>
-				AND (PostTitle LIKE '%#trim(arguments.keyword)#%' OR CONTAINS(PostBody, '"#trim(arguments.keyword)#"'))
+				AND (PostTitle ILIKE '%#trim(arguments.keyword)#%' OR to_tsvector('english', PostBody) @@ to_tsquery('english','#trim(arguments.keyword)#'))
 			</cfif>
 				AND Score > 1
 		</cfquery>
@@ -1680,7 +1686,7 @@
 					AND Region = 'EU-EN'
 				</cfif>
 				<cfif len(trim(arguments.keyword))>
-					AND (PostTitle LIKE '%#trim(arguments.keyword)#%' OR CONTAINS(PostBody, '"#trim(arguments.keyword)#"'))
+					AND (PostTitle ILIKE '%#trim(arguments.keyword)#%' OR to_tsvector('english', PostBody) @@ to_tsquery('english','#trim(arguments.keyword)#'))
 				</cfif>
 				AND Score > 1
 			)

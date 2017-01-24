@@ -76,6 +76,12 @@
 			<cfset variables.htmlContent = html />
 		</cfif>
 	</cffunction>
+
+	<cffunction name="Purge" returntype="void" access="public" output="true">
+
+		<cfset variables.postQuery = 0 />
+		<cfset variables.htmlContent = '' />
+	</cffunction>
 	
 	<cffunction name="getForumPostQueryFromHTML" returntype="query" access="public" output="false">
 		<cfargument name="html" type="string" required="true" />

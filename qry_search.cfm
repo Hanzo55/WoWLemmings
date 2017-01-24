@@ -26,6 +26,8 @@
 		AND isRogue = 1
 	<cfelseif clas is "deth">
 		AND isDeathKnight = 1
+	<cfelseif clas is "demo">
+		AND isDemonHunter = 1
 	<cfelseif clas is "drui">
 		AND isDruid = 1
 	<cfelseif clas is "mage">
@@ -54,7 +56,7 @@
 		AND Region = 'EU-EN'
 	</cfif>
 	<cfif len(trim(keyword))>
-		AND (PostTitle LIKE '%#trim(keyword)#%' OR CONTAINS(PostBody, '"#trim(keyword)#"'))
+		AND (PostTitle ILIKE '%#trim(keyword)#%' OR to_tsvector('english', PostBody) @@ to_tsquery('english','#trim(keyword)#'))
 	</cfif>
 		AND 1=1
 </cfquery>
@@ -79,6 +81,8 @@ WITH LinksBlock AS
 		AND isRogue = 1
 	<cfelseif clas is "deth">
 		AND isDeathKnight = 1
+	<cfelseif clas is "demo">
+		AND isDemonHunter = 1
 	<cfelseif clas is "drui">
 		AND isDruid = 1
 	<cfelseif clas is "mage">
@@ -107,7 +111,7 @@ WITH LinksBlock AS
 		AND Region = 'EU-EN'
 	</cfif>
 	<cfif len(trim(keyword))>
-		AND (PostTitle LIKE '%#trim(keyword)#%' OR CONTAINS(PostBody, '"#trim(keyword)#"'))
+		AND (PostTitle ILIKE '%#trim(keyword)#%' OR to_tsvector('english', PostBody) @@ to_tsquery('english','#trim(keyword)#'))
 	</cfif>
 	AND 1=1
 )
@@ -119,3 +123,4 @@ BETWEEN (#page# - 1) * #maxrows# + 1
 AND #page# * #maxrows#
 ORDER BY EffectiveDate DESC
 </cfquery>
+

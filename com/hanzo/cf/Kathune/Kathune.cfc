@@ -1395,6 +1395,8 @@
 		<cfargument name="siteuuid" type="string" required="true" />
 		<cfargument name="hook" type="string" required="true" />
 
+		<cfset var qTestForPost = 0 />
+
 		<cfquery name="qTestForPost" datasource="#variables.dsn#">
 			SELECT l.PostID
 			FROM Links l
@@ -1403,9 +1405,18 @@
 			AND s.SiteUUID = '#arguments.siteuuid#'
 		</cfquery>
 
-		<!--- <cflog file="Kathune" type="information" text="PostExists() Records: #qTestForPost.RecordCount# - SQL: SELECT l.PostID FROM Links l INNER JOIN Sites s ON (l.PostID = s.PostID) WHERE s.Hook = '#arguments.hook#' AND s.SiteUUID = '#arguments.siteuuid#'"> --->
-		
-		<cfreturn (qTestForPost.recordCount gt 0) />
+		<cflog file="Kathune" type="information" text="PostExists() Records: #qTestForPost.RecordCount# - PostID: #qTestForPost.PostID# - SQL: SELECT l.PostID FROM Links l INNER JOIN Sites s ON (l.PostID = s.PostID) WHERE s.Hook = '#arguments.hook#' AND s.SiteUUID = '#arguments.siteuuid#'">
+
+		<!--- a very hairbrained theory I'm testing, only due to what may be a false memory of working with psql back in '08 --->
+		<cfif qTestForPost.RecordCount EQ 0>
+			<cfreturn false />
+		<cfelse>
+			<cfif qTestForPost.RecordCount EQ 1 and qTestForPost.PostID is ''>
+				<cfreturn false />
+			</cfif>
+
+			<cfreturn true />
+		</cfif>
 	</cffunction>
 	
 	<cffunction name="GetPost" returntype="query" access="private" output="false">

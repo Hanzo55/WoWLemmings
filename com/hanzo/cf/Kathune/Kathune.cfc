@@ -1308,6 +1308,11 @@
 				<!--- if the post has been scored as a person looking for a guild, and it doesn't already exist, insert --->
 				<cfif thisPostObj.getScore() gt 0 AND NOT PostExists( arguments.tentacle.getSiteUUID(), thisPostObj.getHookValue() )>
 					
+					<!--- I now have to add a sanity check as this eludes me --->
+					<cfif PostExistsByTitle( thisPostObj.getPostTitle() )>
+						<cflog file="Kathune" type="information" text="WARNING!: SiteUUID: #arguments.tentacle.getSiteUUID()# + Hook: #thisPostObj.getHookValue()# not linked to prexisting record! (title: [#thisPostObj.GetPostTitle()#])">
+					</cfif>
+
 					<cfquery name="qInsert" datasource="#variables.dsn#">
 						insert into Links(PostURL, 
 							  PostTitle, 
@@ -1418,6 +1423,31 @@
 			<cfreturn true />
 		</cfif>
 	</cffunction>
+
+	<cffunction name="PostExistsByTitle" returntype="boolean" access="private" output="false">
+		<cfargument name="title" type="string" required="true" />
+
+		<cfset var qTestTitleForPost = 0 />
+
+		<cfquery name="qTestTitleForPost" datasource="#variables.dsn#">
+			SELECT l.PostID
+			FROM Links l
+			WHERE l.PostTitle like '#replace(arguments.title,"'","''","ALL")#'
+		</cfquery>
+
+		<cflog file="Kathune" type="information" text="PostExistsByTitle() Records: #qTestTitleForPost.RecordCount# (title: #arguments.title#)">
+
+		<!--- a very hairbrained theory I'm testing, only due to what may be a false memory of working with psql back in '08 --->
+		<cfif qTestTitleForPost.RecordCount EQ 0>
+			<cfreturn false />
+		<cfelse>
+			<cfif qTestTitleForPost.RecordCount EQ 1 and qTestTitleForPost.PostID is ''>
+				<cfreturn false />
+			</cfif>
+
+			<cfreturn true />
+		</cfif>
+	</cffunction>	
 	
 	<cffunction name="GetPost" returntype="query" access="private" output="false">
 		<cfargument name="postID" type="numeric" required="true" />

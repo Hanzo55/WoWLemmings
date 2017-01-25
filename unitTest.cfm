@@ -17,12 +17,6 @@
 
 <cfset myArr = obj.getPostsAsObjectArray() />
 
-<cfif ArrayLen(myArr)>
-OK
-<cfelse>
-ERROR
-</cfif>
-
 <!--- HANZO: if ERROR displayed, this part below won't do you much good--->
 <cfloop from="1" to="#arrayLen(myArr)#" index="i">
 	<cfset post = myArr[i] />

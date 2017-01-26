@@ -1377,7 +1377,7 @@
 							VALUES(#thisPostObj.getPostID()#, '#arguments.tentacle.getSiteUUID()#', '#thisPostObj.getHookValue()#')
 						</cfquery>
 
-						<cflog file="Kathune" type="information" text="Post (title [#thisPostObj.GetPostTitle()#]) with PKEY: #thisPostObj.getPost()# INSERTED into Sites (SiteUUID: #arguments.tentacle.getSiteUUID()#, Hook: #thisPostObj.getHookValue()#)">
+						<cflog file="Kathune" type="information" text="Post (title [#thisPostObj.GetPostTitle()#]) with PKEY: #thisPostObj.getPostID()# INSERTED into Sites (SiteUUID: #arguments.tentacle.getSiteUUID()#, Hook: #thisPostObj.getHookValue()#)">
 
 					<!--- </cfif> --->
 					

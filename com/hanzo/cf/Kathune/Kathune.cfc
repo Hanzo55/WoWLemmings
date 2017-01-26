@@ -1308,67 +1308,78 @@
 				<!--- if the post has been scored as a person looking for a guild, and it doesn't already exist, insert --->
 				<cfif thisPostObj.getScore() gt 0 AND NOT PostExists( arguments.tentacle.getSiteUUID(), thisPostObj.getHookValue() )>
 					
-					<!--- I now have to add a sanity check as this eludes me --->
+					<!--- unresolved bug since porting to lucee/postgres: should never happen, but continues to --->
 					<cfif PostExistsByTitle( thisPostObj.getPostTitle() )>
-						<cflog file="Kathune" type="information" text="WARNING!: SiteUUID: #arguments.tentacle.getSiteUUID()# + Hook: #thisPostObj.getHookValue()# not linked to prexisting record! (title: [#thisPostObj.GetPostTitle()#])">
-					</cfif>
 
-					<cfquery name="qInsert" datasource="#variables.dsn#">
-						insert into Links(PostURL, 
-							  PostTitle, 
-							  PostBody,
-							  isAlliance,
-							  isHorde,
-							  isPvP,
-							  isPvE,
-							  isIdiot,
-							  isDeathKnight,
-							  isDemonHunter,
-							  isDruid,
-							  isHunter,
-							  isMage,
-							  isMonk,
-							  isPaladin,
-							  isPriest,
-							  isRogue,
-							  isShaman,
-							  isWarlock,
-							  isWarrior,
-							  Score,
-							  Region,
-							  ArmoryURL)
-						values('#thisPostObj.getPostURL()#',
-							   '#replace(thisPostObj.getPostTitle(),"'","''","ALL")#',
-							   '#thisPostObj.getPostBody()#',
-							   #thisPostObj.isAlliance()#,
-							   #thisPostObj.isHorde()#,
-							   #thisPostObj.isPvP()#,
-							   #thisPostObj.isPvE()#,
-							   #thisPostObj.isIdiot()#,
-							   #thisPostObj.isDeathKnight()#,
-							   #thisPostObj.isDemonHunter()#,
-							   #thisPostObj.isDruid()#,
-							   #thisPostObj.isHunter()#,
-							   #thisPostObj.isMage()#,
-							   #thisPostObj.isMonk()#,
-							   #thisPostObj.isPaladin()#,
-							   #thisPostObj.isPriest()#,
-							   #thisPostObj.isRogue()#,
-							   #thisPostObj.isShaman()#,
-							   #thisPostObj.isWarlock()#,
-							   #thisPostObj.isWarrior()#,
-							   #thisPostObj.getScore()#,
-							   '#thisPostObj.getRegion()#',
-							   '#thisPostObj.getArmoryURL()#')
-						returning postid AS IDENTITY_PKEY;
-					</cfquery>
-					
-					<cfset thisPostObj.setPostID(qInsert.IDENTITY_PKEY) />
-					
-					<cfquery name="ins_join" datasource="#variables.dsn#">
-						INSERT INTO Sites(PostID, SiteUUID, Hook)
-						VALUES(#thisPostObj.getPostID()#, '#arguments.tentacle.getSiteUUID()#', '#thisPostObj.getHookValue()#')
-					</cfquery>
+						<cflog file="Kathune" type="information" text="WARNING!: Post (title [#thisPostObj.GetPostTitle()#]) already found, misassociated to: SiteUUID: #arguments.tentacle.getSiteUUID()# + Hook: #thisPostObj.getHookValue()# -- SKIPPING INSERT">
+
+					</cfif>
+					<!--- cfelse --->
+
+						<cfquery name="qInsert" datasource="#variables.dsn#">
+							insert into Links(PostURL, 
+								  PostTitle, 
+								  PostBody,
+								  isAlliance,
+								  isHorde,
+								  isPvP,
+								  isPvE,
+								  isIdiot,
+								  isDeathKnight,
+								  isDemonHunter,
+								  isDruid,
+								  isHunter,
+								  isMage,
+								  isMonk,
+								  isPaladin,
+								  isPriest,
+								  isRogue,
+								  isShaman,
+								  isWarlock,
+								  isWarrior,
+								  Score,
+								  Region,
+								  ArmoryURL)
+							values('#thisPostObj.getPostURL()#',
+								   '#replace(thisPostObj.getPostTitle(),"'","''","ALL")#',
+								   '#thisPostObj.getPostBody()#',
+								   #thisPostObj.isAlliance()#,
+								   #thisPostObj.isHorde()#,
+								   #thisPostObj.isPvP()#,
+								   #thisPostObj.isPvE()#,
+								   #thisPostObj.isIdiot()#,
+								   #thisPostObj.isDeathKnight()#,
+								   #thisPostObj.isDemonHunter()#,
+								   #thisPostObj.isDruid()#,
+								   #thisPostObj.isHunter()#,
+								   #thisPostObj.isMage()#,
+								   #thisPostObj.isMonk()#,
+								   #thisPostObj.isPaladin()#,
+								   #thisPostObj.isPriest()#,
+								   #thisPostObj.isRogue()#,
+								   #thisPostObj.isShaman()#,
+								   #thisPostObj.isWarlock()#,
+								   #thisPostObj.isWarrior()#,
+								   #thisPostObj.getScore()#,
+								   '#thisPostObj.getRegion()#',
+								   '#thisPostObj.getArmoryURL()#')
+							returning postid AS IDENTITY_PKEY;
+						</cfquery>
+
+						<cflog file="Kathune" type="information" text="Post (title [#thisPostObj.GetPostTitle()#]) INSERTED, Primary Key: #qInsert.IDENTITY_PKEY#">
+						
+						<cfset thisPostObj.setPostID(qInsert.IDENTITY_PKEY) />
+
+						<cflog file="Kathune" type="information" text="PKey Updated In Local Obj (Output: #thisPostObj.getPostID()#)">
+						
+						<cfquery name="ins_join" datasource="#variables.dsn#">
+							INSERT INTO Sites(PostID, SiteUUID, Hook)
+							VALUES(#thisPostObj.getPostID()#, '#arguments.tentacle.getSiteUUID()#', '#thisPostObj.getHookValue()#')
+						</cfquery>
+
+						<cflog file="Kathune" type="information" text="Post (title [#thisPostObj.GetPostTitle()#]) with PKEY: #thisPostObj.getPost()# INSERTED into Sites (SiteUUID: #arguments.tentacle.getSiteUUID()#, Hook: #thisPostObj.getHookValue()#)">
+
+					<!--- </cfif> --->
 					
 				</cfif>
 

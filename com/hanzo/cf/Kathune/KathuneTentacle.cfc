@@ -74,6 +74,9 @@
 		<cfif len( html )>
 			<cfset variables.postQuery = getForumPostQueryFromHTML( html ) />
 			<cfset variables.htmlContent = html />
+		<cfelse>
+			<cfset variables.postQuery = 0 />
+			<cfset variables.htmlContent = '' />
 		</cfif>
 	</cffunction>
 
@@ -171,10 +174,12 @@
 			<cfset httpResult = httpVar.fileContent />
 			
 			<cfif httpResult is "Connection Failure">
+				<cflog file="Kathune" type="information" text="fetchHTML() - Failed on #getForumURL()#: Connection Failure" />
 				<cfreturn "" />
 			</cfif>
 			
 			<cfcatch type="any">
+				<cflog file="Kathune" type="information" text="fetchHTML() - Failed on #getForumURL()#: #cfcatch.message# - #cfcatch.detail#" />
 				<cfreturn "" />
 			</cfcatch>
 		</cftry>
@@ -206,6 +211,7 @@
 			</cfif>
 			
 			<cfcatch type="any">
+				<cflog file="Kathune" type="information" text="fetchPostByHook() - Failed on #getThreadByHook(arguments.hook)#: #cfcatch.message# - #cfcatch.detail#" />			
 				<cfreturn '' />
 			</cfcatch>
 		</cftry>

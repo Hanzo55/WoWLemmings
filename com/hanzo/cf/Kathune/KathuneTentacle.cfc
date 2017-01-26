@@ -271,17 +271,29 @@
 		2. touch up any tentacle-specific scoring in the derived class via polymorphism --->
 		
 		<cfset postObject 	= CreateObject('component', 'com.hanzo.cf.Kathune.Post') />
+
+			<cflog file="Kathune" type="information" text="CreatePostObjectFromQueryRow(#arguments.dataQuery.title[arguments.row]#): New com.hanzo.cf.Kathune.Post object created" />
+		
 		<cfset scoredStruct = TitleToPostStruct( arguments.dataQuery.title[arguments.row] ) />
 		
 		<cfset postObject.init( argumentCollection=scoredStruct ) />
+
+			<cflog file="Kathune" type="information" text="CreatePostObjectFromQueryRow(#arguments.dataQuery.title[arguments.row]#): Post Init Fired - Title Output is: #postObject.getPostTitle()#" />
 		
 		<cfset postObject.setSource( getSource() ) />
 		
 		<cfset postObject.setPostTitle( arguments.dataQuery.title[arguments.row] ) />
+
+			<cflog file="Kathune" type="information" text="CreatePostObjectFromQueryRow(#arguments.dataQuery.title[arguments.row]#): setPostTitle() Fired - Title Output is: #postObject.getPostTitle()#" />
+
 		<cfset postObject.setHookValue( arguments.dataQuery.hook[arguments.row] ) />
 
-		<cfset postObject.setPostURL( getThreadByHook( postObject.getHookValue() ) ) />	
-		
+			<cflog file="Kathune" type="information" text="CreatePostObjectFromQueryRow(#arguments.dataQuery.title[arguments.row]#): setHookValue() Fired - Hook Output is: #postObject.getHookValue()#" />
+
+		<cfset postObject.setPostURL( getThreadByHook( postObject.getHookValue() ) ) />
+
+			<cflog file="Kathune" type="information" text="CreatePostObjectFromQueryRow(#arguments.dataQuery.title[arguments.row]#): setPostURL() Fired - URL is: #postObject.getPostURL()#" />
+	
 		<cfreturn postObject />
 	</cffunction>
 	
@@ -352,7 +364,7 @@
 		
 		<cfloop query="qryServers">
 			<cfif findNoCase(qryServers.ServerName[qryServers.currentRow], arguments.txt) OR 
-					( len(qryServers.ServerRegExp[qryServers.currentRow]) and reFindNoCase(SqryServers.erverRegExp[qryServers.currentRow], arguments.txt) )>
+					( len(qryServers.ServerRegExp[qryServers.currentRow]) and reFindNoCase(qryServers.ServerRegExp[qryServers.currentRow], arguments.txt) )>
 				<!--- server name found! flag the type appropriately --->
 				
 				<!--- check exclusions first --->

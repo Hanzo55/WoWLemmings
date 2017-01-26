@@ -1304,7 +1304,7 @@
 			<cfset thisPostObj = postArray[i] />
 
 			<cftransaction>
-			
+
 				<!--- if the post has been scored as a person looking for a guild, and it doesn't already exist, insert --->
 				<cfif thisPostObj.getScore() gt 0 AND NOT PostExists( arguments.tentacle.getSiteUUID(), thisPostObj.getHookValue() )>
 					

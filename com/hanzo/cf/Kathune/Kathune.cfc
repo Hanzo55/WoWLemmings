@@ -1869,8 +1869,8 @@
 		</cfquery>
 		
 		<cfloop query="qryServers">
-			<cfif findNoCase(qryServers.ServerName[currentRow], arguments.txt) OR 
-					( len(qryServers.ServerRegExp[currentRow]) and reFindNoCase(qryServers.ServerRegExp[currentRow], arguments.txt) )>
+			<cfif findNoCase(qryServers.ServerName[qryServers.currentRow], arguments.txt) OR 
+					( len(qryServers.ServerRegExp[qryServers.currentRow]) and reFindNoCase(qryServers.ServerRegExp[qryServers.currentRow], arguments.txt) )>
 				<!--- server name found! flag the type appropriately --->
 				
 				<!--- check exclusions first --->
@@ -1880,7 +1880,7 @@
 				</cfif>
 				
 				<!--- ELSE, we have a winner, so use the lookup and flag appropriately --->
-				<cfif find("PvP", ServerType[currentRow])>
+				<cfif find("PvP", ServerType[qryServers.currentRow])>
 					<cfset data.isPvP = 1>
 				<cfelse>
 					<cfset data.isPvE = 1>

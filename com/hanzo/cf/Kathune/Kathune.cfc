@@ -1313,8 +1313,7 @@
 
 						<cflog file="Kathune" type="information" text="WARNING!: Post (title [#thisPostObj.GetPostTitle()#]) already found, misassociated to: SiteUUID: #arguments.tentacle.getSiteUUID()# + Hook: #thisPostObj.getHookValue()# -- SKIPPING INSERT">
 
-					</cfif>
-					<!--- cfelse --->
+					<cfelse>
 
 						<cfquery name="qInsert" datasource="#variables.dsn#">
 							insert into Links(PostURL, 
@@ -1379,7 +1378,7 @@
 
 						<cflog file="Kathune" type="information" text="Post (title [#thisPostObj.GetPostTitle()#]) with PKEY: #thisPostObj.getPostID()# INSERTED into Sites (SiteUUID: #arguments.tentacle.getSiteUUID()#, Hook: #thisPostObj.getHookValue()#)">
 
-					<!--- </cfif> --->
+					</cfif>
 					
 				</cfif>
 

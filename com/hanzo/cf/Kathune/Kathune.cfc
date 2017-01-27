@@ -494,7 +494,7 @@
 		<cfset var armoryURL = '' />
 		<cfset var row = 0 />
 		<cfset var id = '' />
-	
+			
 		<cfquery name="qLinks__FetchAllWithoutBodies" datasource="#variables.dsn#" blockfactor="#arguments.maxThreads#">
 			SELECT l.*, s.SiteUUID, s.Hook
 			FROM Links l
@@ -515,36 +515,68 @@
 						  tSiteUUID="#qLinks__FetchAllWithoutBodies.SiteUUID[qLinks__FetchAllWithoutBodies.currentRow]#"
 						  tHook="#qLinks__FetchAllWithoutBodies.Hook[qLinks__FetchAllWithoutBodies.currentRow]#"
 						  tPostID="#qLinks__FetchAllWithoutBodies.PostID[qLinks__FetchAllWithoutBodies.currentRow]#"
+						  tPostTitle="#qLinks__FetchAllWithoutBodies.PostTitle[qLinks__FetchAllWithoutBodies.currentRow]#"
 						  tID="#id#"
 						  action="run">
 					
 					<cfset var armoryURL = '' />
 					<cfset var tentacle = 0 />
-					<cfset var postBody = '' />
+					<cfset var postStruct = structNew() />
+					<cfset var failed = false />
 					
-					<cflog file="Kathune" type="information" text="__Feed_thread_#row#_#tID# - Feeding off of SiteUUID: #tSiteUUID#, Hook: #tHook#, PostID: #tPostID#">
+					<cflog file="Kathune" type="information" text="__Feed_thread_#row#_#tID# - Feeding off of SiteUUID: #tSiteUUID#, Hook: #tHook#, PostID: #tPostID#, Post Title: #tPostTitle#">
 					
 					<cfset tentacle = getTentacleBySiteUUID( tSiteUUID ) />
-					<cfset postBody = tentacle.fetchPostByHook( tHook ) />
-					
-					<cfif len(postBody)>
-					
-						<!--- let's get rid of some shit first --->
-						<cfif find('\n', postBody)>
-							<cfset postBody = Replace(postBody, '\n', ' ', 'ALL')/>
-						</cfif>
-	
-						<cfset armoryURL = tentacle.fetchArmoryURLFromPost( postBody ) />
+
+					<!--- TODO: make this return a STRUCT with the post title *and* the post body, so that the title
+					can be 2nd checked against forums that love to fucking randomly change the ids of the posts AFTER they
+					are fuckin' posted -- WHO DOES THIS?!!?!! --->
+					<cfset postStruct = tentacle.fetchPostByHook( tHook ) />
+
+					<!--- sigh, run your SECOND title check --->
+					<cfif Compare(tPostTitle, postStruct.title)>
+
+						<cfset failed = true />
+
+						<cflog file="Kathune" type="information" text="__Feed_thread_#row#_#tID# - Feed() for Hook [#tHook#] expected title [#tPostTitle#], instead got [#postStruct.title#]. Hooks have changed, PostID:#tPostID# purged" />
+
+					</cfif>
+
+					<cfif NOT failed>
+
+						<cfif len(postStruct.title) and len(postStruct.body)>
 						
+							<!--- let's get rid of some shit first --->
+							<cfif find('\n', postStruct.body)>
+								<cfset postStruct.body = Replace(postStruct.body, '\n', ' ', 'ALL')/>
+							</cfif>
+
+						<cfelse>
+
+							<cfset failed = true />
+
+							<cflog file="Kathune" type="information" text="__Feed_thread_#row#_#tID# - Feed() Post not found, PostID:#tPostID# purged">
+
+						</cfif>
+
+					</cfif>
+					
+					<cfif NOT failed>
+
+						<!---
+						HANZO: Disabled for now, armory hasn't been accessed like this in years
+						<cfset armoryURL = tentacle.fetchArmoryURLFromPost( postBody ) />
+						--->
+
 						<cfquery name="qUpdateLink__Feed_thread#tID#" datasource="#variables.dsn#">
 							UPDATE Links
-								SET PostBody = '#postBody#',
+								SET PostBody = '#postStruct.body#',
 									ArmoryURL = '#armoryURL#'
 							WHERE PostID = #tPostID#
 						</cfquery>
-						
-						<cflog file="Kathune" type="information" text="__Feed_thread_#row#_#tID# - PostID: #tPostID# - Hook: #tHook# - Post Eaten (Body: #len(postBody)# bytes, Armory: #iif(len(armoryURL),de('TRUE'),de('FALSE'))#)">
-					
+
+						<cflog file="Kathune" type="information" text="__Feed_thread_#row#_#tID# - PostID: #tPostID# - Hook: #tHook# - Post Eaten (Body: #len(postStruct.body)# bytes, Armory: #iif(len(armoryURL),de('TRUE'),de('FALSE'))#)">
+
 					<cfelse>
 					
 						<cfquery name="qPurgeLink__Feed_thread#tID#" datasource="#variables.dsn#">
@@ -552,8 +584,6 @@
 							DELETE FROM Links WHERE PostID = #tPostID#;
 						</cfquery>	
 						
-						<cflog file="Kathune" type="information" text="__Feed_thread_#row#_#tID# - Post Not Found, PostID:#tPostID# purged from database">				
-					
 					</cfif>
 					
 				</cfthread>
@@ -1340,7 +1370,7 @@
 								  Region,
 								  ArmoryURL)
 							values('#thisPostObj.getPostURL()#',
-								   '#replace(thisPostObj.getPostTitle(),"'","''","ALL")#',
+								   '#thisPostObj.getPostTitle()#',
 								   '#thisPostObj.getPostBody()#',
 								   #thisPostObj.isAlliance()#,
 								   #thisPostObj.isHorde()#,

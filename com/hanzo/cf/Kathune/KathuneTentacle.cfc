@@ -157,7 +157,7 @@
 
 			<cfset QueryAddRow( mQuery ) />
 
-			<cfset QuerySetCell( mQuery, 'title', token.title ) />
+			<cfset QuerySetCell( mQuery, 'title', urldecode(token.title) ) />
 			<cfset QuerySetCell( mQuery, 'hook', token.hook ) />
 		</cfloop>		
 		
@@ -193,40 +193,73 @@
 		<cfreturn httpResult />
 	</cffunction>
 	
-	<cffunction name="fetchPostByHook" returntype="string" access="public" output="false">
+	<cffunction name="fetchPostByHook" returntype="struct" access="public" output="false">
 		<cfargument name="hook" type="string" required="true" />
 		<cfscript>
 			var httpVar 		= structNew();
-			var postVar 		= arrayNew(1);
+			var postTitle		= arrayNew(1);
+			var postBody		= arrayNew(1);
+			var postData		= structNew();
+			var cleaned			= '';
+
+			postData.title 		= '';
+			postData.body 		= '';
+
+
 		</cfscript>
+
+		<!--- Between 2008 (wowlemmings inception) and 2016, this method returned a string: the body of the first post of the actual recruitment
+		thread. As of now, it will return a struct containing the title of the post and the first post (the original string it used to return).
+		the reason? apparently Blizzard's new forums like to switch ids around on brand new posts (for reasons I have yet to comprehend), and
+		in order to prevent an extra HTTP request *just* to compare the forum titles a SECOND time, i'm returning the title with the body so that
+		it can be used as a comparison. 
+
+		NOTE: ALL old tentacles that derive will have to be updated in order for this to work 
+		--->
 		
 		<cftry>
 			<cfhttp method="get" url="#getThreadByHook(arguments.hook)#" timeout="#variables.timeout#" resolveurl="false" result="httpVar" throwOnError="true">
 			
-			<cfif httpVar.fileContent is "Connection Failure">
-				<cfreturn '' />
+			<!--- we store it locally now in case we need to debug the regular expression via getBodyHTML() --->
+			<cfset variables.bodyHTML = httpVar.fileContent />
+
+			<cfif variables.bodyHTML is "Connection Failure">
+				<cfreturn postData />
 			</cfif>
-			
-			<cfif not REFindNoCase( getBodyRegularExpression(), httpVar.fileContent )>
-				<cfreturn '' />
+
+			<!--- now parsed html must both successfully pull a title and a body --->
+			<cfif not REFindNoCase( getTitleRegularExpression(), variables.bodyHTML ) and not REFindNoCase( getBodyRegularExpression(), variables.bodyHTML )>
+				<cfreturn postData />
 			</cfif>
-			
+						
 			<!--- the parsing is so trivial, let's just do it in this method --->
-			<cfif len( httpVar.fileContent )>
-				<cfset postVar = ReMatch( getBodyRegularExpression(), httpVar.fileContent ) />
+			<cfif len( variables.bodyHTML )>
+
+				<!--- 1. TITLE --->
+				<cfset postTitle = ReMatch( getTitleRegularExpression(), variables.bodyHTML ) />
+
+				<cfset cleaned = trim( ReReplace( postTitle[1], getTitleRegularExpression(), '\1', 'ONE' ) ) />
+
+				<cfset cleaned = URLDecode( cleaned ) />
+
+				<cfset cleaned = replace( cleaned, "'", "''", "ALL" ) />
+
+				<cfset postData.title = cleaned />
+
+				<!--- 2. BODY --->
+				<cfset postBody = ReMatch( getBodyRegularExpression(), variables.bodyHTML ) />
+
+				<cfset postData.body = trim( ReReplace( postBody[1], getBodyRegularExpression(), '\1', 'ONE' ) ) />	<!--- the first match will be the person's post, anything else are people responding to his post --->
+
 			</cfif>
 			
 			<cfcatch type="any">
-				<cflog file="Kathune" type="information" text="fetchPostByHook() - Failed on #getThreadByHook(arguments.hook)#: #cfcatch.message# - #cfcatch.detail#" />			
-				<cfreturn '' />
+				<cflog file="Kathune" type="information" text="fetchPostByHook() - Failed on #getThreadByHook(arguments.hook)#: #cfcatch.message# - #cfcatch.detail#" />
+				<cfreturn postData />
 			</cfcatch>
 		</cftry>
-	
-		<cfif ArrayLen(postVar)>	
-			<cfreturn trim(ReReplace( postVar[1], getBodyRegularExpression(), '\1', 'ONE' )) />	<!--- the first match will be the person's post, anything else are people responding to his post --->
-		<cfelse>
-			<cfreturn '' />
-		</cfif>
+		
+		<cfreturn postData />		
 	</cffunction>		
 	
 	<cffunction name="ExtractTitleAndHookFromLink" returntype="struct" access="public" output="false">
@@ -282,7 +315,7 @@
 		
 		<cfset postObject.setSource( getSource() ) />
 		
-		<cfset postObject.setPostTitle( arguments.dataQuery.title[arguments.row] ) />
+		<cfset postObject.setPostTitle( replace(arguments.dataQuery.title[arguments.row],"'","''","ALL") ) />
 
 			<cflog file="Kathune" type="information" text="CreatePostObjectFromQueryRow(#arguments.dataQuery.title[arguments.row]#): setPostTitle() Fired - Title Output is: #postObject.getPostTitle()#" />
 
@@ -862,6 +895,28 @@
 	
 		<cfreturn variables.bregex />
 	</cffunction>	
+
+	<cffunction name="setTitleRegularExpression" returntype="void" access="public" output="false">
+		<cfargument name="regex" type="string" required="true" />
+		
+		<cfset variables.tregex = arguments.regex />
+	</cffunction>	
+	
+	<cffunction name="getTitleRegularExpression" returntype="string" access="public" output="false">
+	
+		<cfreturn variables.tregex />
+	</cffunction>		
+
+	<cffunction name="setBodyHTML" returntype="void" access="public" output="false">
+		<cfargument name="html" type="string" required="true" />
+
+		<cfset variables.bodyHTML = arguments.html />
+	</cffunction>
+
+	<cffunction name="getBodyHTML" returntype="string" access="public" output="false">
+
+		<cfreturn variables.bodyHTML />
+	</cffunction>
 
 	
 

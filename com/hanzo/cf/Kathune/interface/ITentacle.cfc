@@ -6,7 +6,7 @@
 	<cffunction name="fetchHTML" returntype="string" access="public" output="false">
 	</cffunction>
 	
-	<cffunction name="fetchPostByHook" returntype="string" access="public" output="false">
+	<cffunction name="fetchPostByHook" returntype="struct" access="public" output="false">
 		<cfargument name="hook" type="string" required="true" />
 	</cffunction>	
 	

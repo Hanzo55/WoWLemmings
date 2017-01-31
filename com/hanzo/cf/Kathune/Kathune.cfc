@@ -1325,25 +1325,113 @@
 
 		<cfset var postArray = 0 />
 		<cfset var thisPostObj = 0 />
+		<cfset var oldPost = 0 />
 		<cfset var i = 0 />
 		
+		<!--- Kathune v2.0 (thanks BLIZZARD)
+
+		for each post:
+
+		1. Does it have a score of 1?
+
+		if yes
+
+			2. Does the URL already exist?
+
+			if yes
+
+				3. Does the Existing URL's title match the current title?
+
+				if yes
+
+					SKIP
+
+				if no
+
+					(the old post is gone, this is a new post that still scores well)
+					UPDATE LINKS
+
+			if no
+
+				INSERT INTO LINKS
+				INSERT INTO SITES
+
+		if no
+
+			SKIP
+
+		--->
+
 		<cfset postArray = arguments.tentacle.getPostsAsObjectArray() />
 
 		<cfloop from="1" to="#arrayLen(postArray)#" index="i">
 			
 			<cfset thisPostObj = postArray[i] />
 
-			<cftransaction>
+			<!--- 1. Does it have a score of 1? --->
+			<cfif thisPostObj.getScore() EQ 1>
 
-				<!--- if the post has been scored as a person looking for a guild, and it doesn't already exist, insert --->
-				<cfif thisPostObj.getScore() gt 0 AND NOT PostExists( arguments.tentacle.getSiteUUID(), thisPostObj.getHookValue() )>
-					
-					<!--- unresolved bug since porting to lucee/postgres: should never happen, but continues to --->
-					<cfif PostExistsByTitle( thisPostObj.getPostTitle() )>
+				<!--- 2. Does the URL already exist? --->
+				<cfif PostExists( arguments.tentacle.getSiteUUID(), thisPostObj.getHookValue() )>
 
-						<cflog file="Kathune" type="information" text="WARNING!: Post (title [#thisPostObj.GetPostTitle()#]) already found, misassociated to: SiteUUID: #arguments.tentacle.getSiteUUID()# + Hook: #thisPostObj.getHookValue()# -- SKIPPING INSERT">
+					<cflog file="Kathune" type="information" text="WARNING: Post (SiteUID: #arguments.tentacle.getSiteUUID()#, Hook: #thisPostObj.getHookValue()#) FOUND in database">
+
+					<!--- 3. Does the existing URL title match this post's title? --->
+					<cfset oldPost = GetPostByURL( arguments.tentacle, thisPostObj.getPostURL() ) />
+
+					<cfif oldPost.getPostID() NEQ -1>
+
+						<cfif Compare( oldPost.getPostTitle(), thisPostObj.getPostTitle() )>
+
+							<!--- 3. for the two shared URLs in question, the old post's title does not match the new post's title, 
+							so assume the old post is gone-zo, and we'll update our local DB to the new post --->
+
+							<!--- this update will automatically set the score back to 1 and the body to '', for re-processing --->
+							<cfquery name="qUpdate" datasource="#variables.dsn#">
+								update Links
+								set PostTitle = '#thisPostObj.getPostTitle()#', 
+									PostBody = '',
+									isAlliance = #thisPostObj.isAlliance()#,
+									isHorde = #thisPostObj.isHorde()#,
+									isPvP = #thisPostObj.isPvP()#,
+									isPvE = #thisPostObj.isPvE()#,
+									isIdiot = #thisPostObj.isIdiot()#,
+									isDeathKnight = #thisPostObj.isDeathKnight()#,
+									isDemonHunter = #thisPostObj.isDemonHunter()#,
+									isDruid = #thisPostObj.isDruid()#,
+									isHunter = #thisPostObj.isHunter()#,
+									isMage = #thisPostObj.isMage()#,
+									isMonk = #thisPostObj.isMonk()#,
+									isPaladin = #thisPostObj.isPaladin()#,
+									isPriest = #thisPostObj.isPriest()#,
+									isRogue = #thisPostObj.isRogue()#,
+									isShaman = #thisPostObj.isShaman()#,
+									isWarlock #thisPostObj.isWarlock()#,
+									isWarrior = #thisPostObj.isWarrior()#,
+									Score = 1,
+									Region = #thisPostObj.getRegion()#,
+									ArmoryURL = '#thisPostObj.getArmoryURL()#'
+								where PostID = #oldPost.getPostID()#;
+							</cfquery>
+
+							<cflog file="Kathune" type="information" text="Post URL #oldPost.GetPostURL()# (title: [#oldPost.GetPostTitle()#]) no longer in existence, UPDATED (replaced by) title [#thisPostObj.GetPostTitle()#] - PKEY: #oldPost.getPostID()# - SiteUUID: #arguments.tentacle.getSiteUUID()# - Hook: #thisPostObj.getHookValue()#">
+
+						<cfelse>
+
+							<cflog file="Kathune" type="information" text="Post URL #thisPostObj.GetPostURL()# (title: [#thisPostObj.GetPostTitle()#]) already captured, SKIPPING">
+
+						</cfif>
 
 					<cfelse>
+
+						<cflog file="Kathune" type="information" text="WARNING: oldPost Object returns ID of -1, GetPostByURL() failed to find something for #thisPostObj.GetPostURL()#">
+
+					</cfif>
+
+				<cfelse>
+
+					<!--- 2. Post does NOT alredy exist, INSERT --->
+					<cftransaction>
 
 						<cfquery name="qInsert" datasource="#variables.dsn#">
 							insert into Links(PostURL, 
@@ -1371,7 +1459,7 @@
 								  ArmoryURL)
 							values('#thisPostObj.getPostURL()#',
 								   '#thisPostObj.getPostTitle()#',
-								   '#thisPostObj.getPostBody()#',
+								   '',
 								   #thisPostObj.isAlliance()#,
 								   #thisPostObj.isHorde()#,
 								   #thisPostObj.isPvP()#,
@@ -1389,7 +1477,7 @@
 								   #thisPostObj.isShaman()#,
 								   #thisPostObj.isWarlock()#,
 								   #thisPostObj.isWarrior()#,
-								   #thisPostObj.getScore()#,
+								   1,
 								   '#thisPostObj.getRegion()#',
 								   '#thisPostObj.getArmoryURL()#')
 							returning postid AS IDENTITY_PKEY;
@@ -1408,17 +1496,13 @@
 
 						<cflog file="Kathune" type="information" text="Post (title [#thisPostObj.GetPostTitle()#]) with PKEY: #thisPostObj.getPostID()# INSERTED into Sites (SiteUUID: #arguments.tentacle.getSiteUUID()#, Hook: #thisPostObj.getHookValue()#)">
 
-					</cfif>
-					
+					</cftransaction>
+
 				</cfif>
 
-			</cftransaction>
+			</cfif>
 
 		</cfloop>
-
-		<!--- we've processed all the html for this one set of posts, so force the tentacle to dump its local cache
-		(I suspect shared memory issues here when working on a thread) --->
-		<cfset arguments.tentacle.Purge() />		
 	</cffunction>
 	
 	<cffunction name="getTentacleBySiteUUID" returntype="com.hanzo.cf.Kathune.KathuneTentacle" access="private" output="false">
@@ -1502,6 +1586,29 @@
 		</cfquery>
 		
 		<cfreturn qPost__Fetch />
+	</cffunction>
+
+	<cffunction name="GetPostByURL" returntype="com.hanzo.cf.Kathune.Post" access="private" output="false">
+		<cfargument name="tentacle" type="struct" reqiured="true" />
+		<cfargument name="urlString" type="string" required="true" />
+		
+		<cfset var qPostByURL__Fetch = 0 />
+		<cfset var nPost = 0 />
+		
+		<cfquery name="qPostByURL__Fetch" datasource="#variables.dsn#" blockfactor="1">
+			SELECT l.*, l.PostTitle AS title, s.SiteUUID, s.Hook
+			FROM Links l
+				INNER JOIN Sites s ON (l.PostID = s.PostID)
+			WHERE l.PostURL = '#arguments.urlString#'
+		</cfquery>
+
+		<cfif qPostByURL__Fetch.RecordCount EQ 1>
+			<cfset nPost = arguments.tentacle.CreatePostObjectFromQueryRow( qPostByURL__Fetch, 1 ) />
+		<cfelse>
+			<cfset nPost = CreateObject('component','com.hanzo.cf.Kathune.Post').init( ) />
+		</cfif>
+
+		<cfreturn nPost />
 	</cffunction>
 	
 	<cffunction name="GetStatistics" returntype="query" access="public" output="false">

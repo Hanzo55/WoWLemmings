@@ -24,7 +24,7 @@
 	variables.paladin 		= 'pally|paly| pala |paladin|tankadin|retadin|healadin|holydin|loladin';
 	variables.role			= 'tank|healer|healbot|nuker|caster';
 	
-	variables.typo 			= 'rouge|drood|furry|worrier|warruir|shamy|serius|shamman|giuld|desto|walrlock|huner|paly|palidan|atunned|dorf|experinced|rading|holydin|loladin|hardocre|grull|preist|deth|windwaker';
+	variables.typo 			= 'rouge|drood|furry|worrier|warruir|shamy|serius|shamman|giuld|desto|walrlock|huner|paly|palidan|atunned|dorf|experinced|rading|holydin|loladin|hardocre|grull|preist|pirest|deth|windwaker';
 	
 	variables.allyFlag 		= 'gnome|dwarf|dorf|nelf|night elf|nightelf| ne |draenei|human|alliance';
 	variables.hordeFlag 	= 'orc|undead|troll|tauren|belf|blood elf|bloodelf|horde';
@@ -305,27 +305,27 @@
 		
 		<cfset postObject 	= CreateObject('component', 'com.hanzo.cf.Kathune.Post') />
 
-			<cflog file="Kathune" type="information" text="CreatePostObjectFromQueryRow(#arguments.dataQuery.title[arguments.row]#): New com.hanzo.cf.Kathune.Post object created" />
+			<!--- <cflog file="Kathune" type="information" text="CreatePostObjectFromQueryRow(#arguments.dataQuery.title[arguments.row]#): New com.hanzo.cf.Kathune.Post object created" /> --->
 		
 		<cfset scoredStruct = TitleToPostStruct( arguments.dataQuery.title[arguments.row] ) />
 		
 		<cfset postObject.init( argumentCollection=scoredStruct ) />
 
-			<cflog file="Kathune" type="information" text="CreatePostObjectFromQueryRow(#arguments.dataQuery.title[arguments.row]#): Post Init Fired - Title Output is: #postObject.getPostTitle()#" />
+			<!--- <cflog file="Kathune" type="information" text="CreatePostObjectFromQueryRow(#arguments.dataQuery.title[arguments.row]#): Post Init Fired - Title Output is: #postObject.getPostTitle()#" /> --->
 		
 		<cfset postObject.setSource( getSource() ) />
 		
 		<cfset postObject.setPostTitle( replace(arguments.dataQuery.title[arguments.row],"'","''","ALL") ) />
 
-			<cflog file="Kathune" type="information" text="CreatePostObjectFromQueryRow(#arguments.dataQuery.title[arguments.row]#): setPostTitle() Fired - Title Output is: #postObject.getPostTitle()#" />
+			<!--- <cflog file="Kathune" type="information" text="CreatePostObjectFromQueryRow(#arguments.dataQuery.title[arguments.row]#): setPostTitle() Fired - Title Output is: #postObject.getPostTitle()#" /> --->
 
 		<cfset postObject.setHookValue( arguments.dataQuery.hook[arguments.row] ) />
 
-			<cflog file="Kathune" type="information" text="CreatePostObjectFromQueryRow(#arguments.dataQuery.title[arguments.row]#): setHookValue() Fired - Hook Output is: #postObject.getHookValue()#" />
+			<!--- <cflog file="Kathune" type="information" text="CreatePostObjectFromQueryRow(#arguments.dataQuery.title[arguments.row]#): setHookValue() Fired - Hook Output is: #postObject.getHookValue()#" /> --->
 
 		<cfset postObject.setPostURL( getThreadByHook( postObject.getHookValue() ) ) />
 
-			<cflog file="Kathune" type="information" text="CreatePostObjectFromQueryRow(#arguments.dataQuery.title[arguments.row]#): setPostURL() Fired - URL is: #postObject.getPostURL()#" />
+			<!--- <cflog file="Kathune" type="information" text="CreatePostObjectFromQueryRow(#arguments.dataQuery.title[arguments.row]#): setPostURL() Fired - URL is: #postObject.getPostURL()#" /> --->
 	
 		<cfreturn postObject />
 	</cffunction>

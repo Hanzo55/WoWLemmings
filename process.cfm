@@ -2,6 +2,7 @@
 <cfparam name="url.scoreOnly" default="false">
 <cfparam name="url.twitOnly" default="false">
 <cfparam name="url.twitSearchOnly" default="false">
+<cfparam name="url.pruneOnly" default="false">
 
 <cfscript>
 	// since digestfood() is multithreaded, we may want to call it more frequently (say every 5-10 minutes)
@@ -10,6 +11,8 @@
 		request.kathune.Feed(request.kathune.getMaxThreads());
 	else if (url.scoreOnly)
 		request.kathune.Digest(request.kathune.getMaxThreads());
+	else if (url.pruneOnly)
+		request.kathune.Torment(request.kathune.getMaxThreads());
 	else if (url.twitOnly)
 		request.kathune.Glare();
 	else if (url.twitSearchOnly)

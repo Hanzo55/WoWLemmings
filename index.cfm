@@ -354,7 +354,9 @@
 	<cfreturn finalTrimmed />
 </cffunction>
 
-<cfset AdType = RandRange(0,2) />
+<cfset AdType = 0 />
+
+<cfset adblock_msg = 'We get it. Ads suck. WoWLemmings.com is a free service. Please consider whitelisting *.wowlemmings.com, or donating via the orange "Donate" button in the left-hand panel.' />
 
 <!--- Capture the Query_String --->
 <cfset request.kathune.AddSearchToQueue(CGI.QUERY_STRING) />
@@ -369,15 +371,17 @@
 	<title>WoW Lemmings : Rebuild your guild.</title>
 	<link rel="alternate" type="application/rss+xml" title="WoW Lemmings" href="<cfoutput>#getRSS()#</cfoutput>" />
 	<link href="/css/wowlemmings.cfm" rel="stylesheet" type="text/css" /> <!--- hanzo: added to the bottom of /resources/css/cf.css --->
-	<script language="Javascript">
-	function doAlert() {
-		var pay = readCookie('lemmingspay');
-		if (!pay || pay != 1) {
-		alert('**A Request From WoWLemmings.com**\n\nPlease consider a donation to help support WoWLemmings.com. We have been providing recruits for over a year and accrued only a few dollars in return. Hosting is NOT FREE. Click the *DONATE* button on this page if you wish to help keep WoWLemmings.com running!');
-		createCookie('lemmingspay',1,365);
-		}
-	}	
-	</script>
+	<script>
+    window.onload = function() {
+      setTimeout(function() {
+        var ad = document.querySelector("ins.adsbygoogle");
+        if (ad && ad.innerHTML.replace(/\s/g, "").length == 0) {
+          ad.style.cssText = 'display:block !important'; 
+          ad.parentNode.innerHTML += '<div style="padding:5px; background-color:#171717; border:1px solid #fff; margin:5px 5px 10px 5px; display:inline-block; text-align:left; position: absolute; top: 0px; left: 0px;"><cfoutput>#adblock_msg#</cfoutput></div>';
+        }
+      }, 1000);
+    };
+   </script>
 </head>
 <body onLoad="populateServers();preselectServer();">
 <div id="container">
@@ -390,7 +394,18 @@
 	<script type="text/javascript" src="http://www.wowlemmings.com/adserver/adserver.cfm?a=54100709-FF86-68E4-63F495A84BF9683E"></script>
 	--->
 	<cfif AdType eq 0>
-			<script type="text/javascript"><!--
+		<div id="top-banner">
+			<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+			<!-- WoWLemmings-Top Banner -->
+			<ins class="adsbygoogle"
+			     style="display:inline-block;width:728px;height:90px"
+			     data-ad-client="ca-pub-6215660586764867"
+			     data-ad-slot="5199871562"></ins>
+			<script>
+			(adsbygoogle = window.adsbygoogle || []).push({});
+			</script>
+		</div>
+<!--- 			<script type="text/javascript"><!--
 			google_ad_client = "pub-6215660586764867";
 			/* WoWLemmings-Top Banner */
 			google_ad_slot = "5199871562";
@@ -401,6 +416,7 @@
 			<script type="text/javascript"
 			src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 			</script>
+ --->	
 	<cfelseif AdType eq 1>
 			<a name='b_9270abb00cf9012db580000d60d4c902'></a><object classid='clsid:d27cdb6e-ae6d-11cf-96b8-444553540000' codebase='http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0' width='205' height='350' id='badge9270abb00cf9012db580000d60d4c902' align='middle'>
 			<param name='allowScriptAccess' value='always' />

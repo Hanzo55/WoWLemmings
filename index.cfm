@@ -271,7 +271,7 @@
 			strip = wordTrim(strip, 400) & "...";
 
 		// prepare the end end
-		balloon = balloon & strip & '</span><span class="bottom"></span></span>';
+		balloon = balloon & HTMLEditFormat(strip) & '</span><span class="bottom"></span></span>';
 	</cfscript>
 	
 	<cfreturn balloon />
